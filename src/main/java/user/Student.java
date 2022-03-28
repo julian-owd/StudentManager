@@ -3,6 +3,7 @@ package user;
 import course.Entry;
 import course.Exam;
 import course.Homework;
+
 import java.util.ArrayList;
 
 /**
@@ -10,7 +11,7 @@ import java.util.ArrayList;
  * @date 28.03.2022
  */
 
-public class Student extends User{
+public class Student extends User {
     private ArrayList<Entry> participants;
     private Exam exam;
     private Homework homework;

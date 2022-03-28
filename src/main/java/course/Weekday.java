@@ -6,11 +6,7 @@ package course;
  */
 
 public enum Weekday {
-    Monday,
-    Thuesday,
-    Wednesday,
-    Thrusday,
-    Friday;
+    Monday, Thuesday, Wednesday, Thrusday, Friday;
 
     private int wID;
     private String designation;
