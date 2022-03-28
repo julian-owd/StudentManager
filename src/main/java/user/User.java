@@ -1,5 +1,10 @@
 package user;
 
+/**
+ * @author Elias Paul
+ * @date 28.03.2022
+ */
+
 public abstract class User {
     private int uID;
     private String lastName;

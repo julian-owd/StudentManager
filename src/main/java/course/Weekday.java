@@ -1,5 +1,10 @@
 package course;
 
+/**
+ * @author Elias Paul
+ * @date 28.03.2022
+ */
+
 public enum Weekday {
     Monday,
     Thuesday,

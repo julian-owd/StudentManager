@@ -4,6 +4,11 @@ import user.Student;
 
 import java.util.ArrayList;
 
+/**
+ * @author Elias Paul
+ * @date 28.03.2022
+ */
+
 public class Homework {
     private int hID;
     private String designation;

@@ -1,5 +1,10 @@
 package course;
 
+/**
+ * @author Elias Paul
+ * @date 28.03.2022
+ */
+
 public class Exam {
     private int eID;
     private String designation;

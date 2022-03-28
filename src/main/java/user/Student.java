@@ -5,6 +5,11 @@ import course.Exam;
 import course.Homework;
 import java.util.ArrayList;
 
+/**
+ * @author Elias Paul
+ * @date 28.03.2022
+ */
+
 public class Student extends User{
     private ArrayList<Entry> participants;
     private Exam exam;

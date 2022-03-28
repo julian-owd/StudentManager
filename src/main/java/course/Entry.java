@@ -2,6 +2,11 @@ package course;
 
 import java.util.Date;
 
+/**
+ * @author Elias Paul
+ * @date 28.03.2022
+ */
+
 public class Entry {
     private int eID;
     private Date date;

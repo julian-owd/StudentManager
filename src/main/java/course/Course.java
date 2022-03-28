@@ -2,6 +2,11 @@ package course;
 
 import java.util.ArrayList;
 
+/**
+ * @author Elias Paul
+ * @date 28.03.2022
+ */
+
 public class Course {
     private int cID;
     private String designation;

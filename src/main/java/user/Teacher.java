@@ -1,5 +1,10 @@
 package user;
 
+/**
+ * @author Elias Paul
+ * @date 28.03.2022
+ */
+
 public class Teacher extends User{
     private Boolean isSick;
     private Boolean isAdmin;
