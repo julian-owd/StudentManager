@@ -13,12 +13,10 @@ public class Homework {
     private int hID;
     private String designation;
     private Course course;
-    private ArrayList<Student> students;
+    private Student doneHomework;
 
     public Homework(int hID) {
         this.hID = hID;
-
-        students = new ArrayList<>();
     }
 
     public int gethID() {
@@ -35,5 +33,21 @@ public class Homework {
 
     public void setDesignation(String designation) {
         this.designation = designation;
+    }
+
+    public Course getCourse() {
+        return course;
+    }
+
+    public void setCourse(Course course) {
+        this.course = course;
+    }
+
+    public Student getDoneHomework() {
+        return doneHomework;
+    }
+
+    public void setDoneHomework(Student doneHomework) {
+        this.doneHomework = doneHomework;
     }
 }
