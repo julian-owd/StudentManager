@@ -10,6 +10,19 @@ import java.util.ArrayList;
 public class Course {
     private int cID;
     private String designation;
+    private ArrayList<Exam> exams;
+    private ArrayList<Homework> homework;
+    private ArrayList<Weekday> weekdays;
+    private ArrayList<Entry> entries;
+
+    public Course(int cID) {
+        this.cID = cID;
+
+        exams = new ArrayList<>();
+        homework = new ArrayList<>();
+        weekdays = new ArrayList<>();
+        entries = new ArrayList<>();
+    }
 
     public int getcID() {
         return cID;
@@ -57,20 +70,6 @@ public class Course {
 
     public void setEntries(ArrayList<Entry> entries) {
         this.entries = entries;
-    }
-
-    private ArrayList<Exam> exams;
-    private ArrayList<Homework> homework;
-    private ArrayList<Weekday> weekdays;
-    private ArrayList<Entry> entries;
-
-    public Course(int cID) {
-        this.cID = cID;
-
-        exams = new ArrayList<>();
-        homework = new ArrayList<>();
-        weekdays = new ArrayList<>();
-        entries = new ArrayList<>();
     }
 
 }
