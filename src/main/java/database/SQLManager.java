@@ -12,7 +12,10 @@ public class SQLManager {
 
     // variables for SQLManager to specify which database with which access level we want to use
     private Connection connection;
-    private String host, database, user, password;
+    private String host;
+    private String database;
+    private String user;
+    private String password;
     private int port;
 
     /**
