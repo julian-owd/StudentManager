@@ -1,5 +1,9 @@
 package user;
 
+import course.Course;
+
+import java.util.ArrayList;
+
 /**
  * @author Elias Paul
  * @date 28.03.2022
@@ -8,9 +12,11 @@ package user;
 public class Teacher extends User {
     private boolean isSick;
     private boolean isAdmin;
+    private ArrayList<Course> courses;
 
     public Teacher(int uID) {
         super(uID);
+        this.courses = new ArrayList<>();
     }
 
     public boolean isAdmin(){
@@ -27,5 +33,13 @@ public class Teacher extends User {
 
     public void setIsSick(boolean isSick){
         this.isSick = isSick;
+    }
+
+    public ArrayList<Course> getCourses() {
+        return courses;
+    }
+
+    public void setCourses(ArrayList<Course> courses) {
+        this.courses = courses;
     }
 }

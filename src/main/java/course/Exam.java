@@ -1,5 +1,7 @@
 package course;
 
+import user.Student;
+
 /**
  * @author Elias Paul
  * @date 28.03.2022
@@ -10,9 +12,11 @@ public class Exam {
     private String designation;
     private int grade;
     private Course course;
+    private Student student;
 
-    public Exam(int eID) {
+    public Exam(int eID, Course course) {
         this.eID = eID;
+        this.course = course;
     }
 
     public int geteID() {
@@ -37,5 +41,21 @@ public class Exam {
 
     public void setGrade(int grade) {
         this.grade = grade;
+    }
+
+    public Course getCourse() {
+        return course;
+    }
+
+    public void setCourse(Course course) {
+        this.course = course;
+    }
+
+    public Student getStudent() {
+        return student;
+    }
+
+    public void setStudent(Student student) {
+        this.student = student;
     }
 }

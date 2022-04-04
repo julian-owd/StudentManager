@@ -6,25 +6,16 @@ package course;
  */
 
 public enum Weekday {
-    MON("Monday"),
-    TUE("Tuesday"),
-    WED("Wednesday"),
-    THR("Thursday"),
-    FRI("Friday");
+    MON("Montag"),
+    TUE("Dienstag"),
+    WED("Mittwoch"),
+    THR("Donnerstag"),
+    FRI("Freitag");
 
-    private int wID;
     private String designation;
 
     Weekday(String designation){
         this.designation = designation;
-    }
-
-    public int getwID() {
-        return wID;
-    }
-
-    public void setwID(int wID) {
-        this.wID = wID;
     }
 
     public String getDesignation() {

@@ -1,7 +1,9 @@
 package course;
 
 import java.util.Date;
+
 import user.Student;
+
 import java.util.ArrayList;
 
 /**
@@ -14,10 +16,13 @@ public class Entry {
     private Date date;
     private String title;
     private String designation;
+    private Course course;
     private ArrayList<Student> participants;
 
-    public Entry(int eID) {
+    public Entry(int eID, Course course) {
         this.eID = eID;
+        this.course = course;
+        this.participants = new ArrayList<>();
     }
 
     public int geteID() {
@@ -58,5 +63,13 @@ public class Entry {
 
     public void setParticipants(ArrayList<Student> participants) {
         this.participants = participants;
+    }
+
+    public Course getCourse() {
+        return course;
+    }
+
+    public void setCourse(Course course) {
+        this.course = course;
     }
 }

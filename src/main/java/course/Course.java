@@ -1,5 +1,8 @@
 package course;
 
+import user.Student;
+import user.Teacher;
+
 import java.util.ArrayList;
 
 /**
@@ -14,14 +17,17 @@ public class Course {
     private ArrayList<Homework> homework;
     private ArrayList<Weekday> weekdays;
     private ArrayList<Entry> entries;
+    private ArrayList<Student> students;
+    private ArrayList<Teacher> teachers;
 
     public Course(int cID) {
         this.cID = cID;
-
-        exams = new ArrayList<>();
-        homework = new ArrayList<>();
-        weekdays = new ArrayList<>();
-        entries = new ArrayList<>();
+        this.exams = new ArrayList<>();
+        this.homework = new ArrayList<>();
+        this.weekdays = new ArrayList<>();
+        this.entries = new ArrayList<>();
+        this.students = new ArrayList<>();
+        this.teachers = new ArrayList<>();
     }
 
     public int getcID() {
@@ -72,4 +78,19 @@ public class Course {
         this.entries = entries;
     }
 
+    public ArrayList<Student> getStudents() {
+        return students;
+    }
+
+    public void setStudents(ArrayList<Student> students) {
+        this.students = students;
+    }
+
+    public ArrayList<Teacher> getTeachers() {
+        return teachers;
+    }
+
+    public void setTeachers(ArrayList<Teacher> teachers) {
+        this.teachers = teachers;
+    }
 }
