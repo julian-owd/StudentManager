@@ -13,7 +13,7 @@ public class Homework {
     private int hID;
     private String designation;
     private Course course;
-    private Student doneHomework;
+    private ArrayList<Student> students;
 
     public Homework(int hID) {
         this.hID = hID;
@@ -43,11 +43,11 @@ public class Homework {
         this.course = course;
     }
 
-    public Student getDoneHomework() {
-        return doneHomework;
+    public ArrayList<Student> getStudents() {
+        return students;
     }
 
-    public void setDoneHomework(Student doneHomework) {
-        this.doneHomework = doneHomework;
+    public void setStudents(ArrayList<Student> students) {
+        this.students = students;
     }
 }

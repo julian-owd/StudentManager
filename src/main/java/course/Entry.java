@@ -1,6 +1,8 @@
 package course;
 
 import java.util.Date;
+import user.Student;
+import java.util.ArrayList;
 
 /**
  * @author Elias Paul
@@ -12,6 +14,7 @@ public class Entry {
     private Date date;
     private String title;
     private String designation;
+    private ArrayList<Student> participants;
 
     public Entry(int eID) {
         this.eID = eID;
@@ -47,5 +50,13 @@ public class Entry {
 
     public void setDesignation(String designation) {
         this.designation = designation;
+    }
+
+    public ArrayList<Student> getParticipants() {
+        return participants;
+    }
+
+    public void setParticipants(ArrayList<Student> participants) {
+        this.participants = participants;
     }
 }
