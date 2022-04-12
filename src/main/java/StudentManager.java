@@ -1,7 +1,7 @@
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
+import javax.mail.*;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
+import java.util.*;
 
 /**
  * @author Julian Oswald
@@ -61,6 +61,38 @@ public class StudentManager {
         }
 
         return stringBuilder.toString();
+    }
+
+    public boolean sendMail(String email, String subject, String message) {
+        Properties properties = System.getProperties();
+        properties.setProperty("mail.smtp.auth", "true");
+        properties.setProperty("mail.smtp.starttls.enable", "true");
+        properties.setProperty("mail.smtp.host", "mail.mailfour24.de");
+        properties.put("mail.smtp.ssl.trust", "mail.mailfour24.de");
+        properties.put("mail.smtp.ssl.protocols", "TLSv1.2");
+        properties.setProperty("mail.smtp.port", "587");
+
+        Session session = Session.getInstance(properties, new Authenticator() {
+            @Override
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication("projekt@julian-oswald.de", "e@T4fb8V_K");
+            }
+        });
+
+        try {
+            Message mimeMessage = new MimeMessage(session);
+
+            mimeMessage.setFrom(new InternetAddress("projekt@julian-oswald.de"));
+            mimeMessage.setRecipient(Message.RecipientType.TO, new InternetAddress(email));
+            mimeMessage.setSubject(subject);
+            mimeMessage.setText(message);
+
+            Transport.send(mimeMessage);
+            return true;
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
 }
