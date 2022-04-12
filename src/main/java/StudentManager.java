@@ -63,7 +63,16 @@ public class StudentManager {
         return stringBuilder.toString();
     }
 
+    /**
+     * send a mail
+     *
+     * @param email the recipient of the mail
+     * @param subject the topic of the mail
+     * @param message the message in the mail
+     * @return if the sending was successful
+     */
     public boolean sendMail(String email, String subject, String message) {
+        // which mail server we want to use and some properties of it
         Properties properties = System.getProperties();
         properties.setProperty("mail.smtp.auth", "true");
         properties.setProperty("mail.smtp.starttls.enable", "true");
@@ -72,6 +81,7 @@ public class StudentManager {
         properties.put("mail.smtp.ssl.protocols", "TLSv1.2");
         properties.setProperty("mail.smtp.port", "587");
 
+        // logging in with the account we want our emails to be sent from
         Session session = Session.getInstance(properties, new Authenticator() {
             @Override
             protected PasswordAuthentication getPasswordAuthentication() {
@@ -82,14 +92,16 @@ public class StudentManager {
         try {
             Message mimeMessage = new MimeMessage(session);
 
+            // setting the variables like sender, recipient, subject & message
             mimeMessage.setFrom(new InternetAddress("projekt@julian-oswald.de"));
             mimeMessage.setRecipient(Message.RecipientType.TO, new InternetAddress(email));
             mimeMessage.setSubject(subject);
             mimeMessage.setText(message);
 
+            // sending the mail
             Transport.send(mimeMessage);
             return true;
-        } catch (MessagingException e) {
+        } catch (MessagingException e) { // catching erros so our program doesn't stop
             e.printStackTrace();
         }
         return false;
