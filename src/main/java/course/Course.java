@@ -93,4 +93,9 @@ public class Course {
     public void setTeachers(ArrayList<Teacher> teachers) {
         this.teachers = teachers;
     }
+
+    @Override
+    public String toString() {
+        return "Course{" + "cID=" + cID + ", designation='" + designation + '\'' + ", exams=" + exams + ", homework=" + homework + ", weekdays=" + weekdays + ", entries=" + entries + ", students=" + students + ", teachers=" + teachers + '}';
+    }
 }

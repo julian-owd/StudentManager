@@ -2,13 +2,107 @@ import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.util.*;
-
+import user.*;
+import course.*;
 /**
  * @author Julian Oswald
  * @date 03.04.2022
  */
 public class StudentManager {
+    private ArrayList<Course> courses = new ArrayList<>();
+    private ArrayList<User> users = new ArrayList<>();
 
+    /**
+     *
+     * @param designation
+     * @return if our designation the same that we set it before
+     */
+    public Course findCourse(String designation){
+        Course found = null;
+        int left = 0;
+        int right = courses.size() - 1;
+
+        while(left <= right && found == null){
+            int mid = (right + left) / 2;
+
+            if(courses.get(mid).getDesignation().equalsIgnoreCase(designation)){
+                found = courses.get(mid);
+            } else {
+                if(designation.compareToIgnoreCase(courses.get(mid).getDesignation()) < 0) right = mid - 1;
+                else left = mid + 1;
+            }
+        }
+        return found;
+    }
+
+    /**
+     *
+     * @param cID
+     * @return if our cID the same that we set it before
+     */
+    public Course findCourse(int cID){
+        Course found = null;
+        int left = 0;
+        int right = courses.size() - 1;
+
+        while(left <= right && found == null){
+            int mid = (right + left) / 2;
+
+            if(courses.get(mid).getcID() == cID){
+                found = courses.get(mid);
+            } else {
+                if(cID < courses.get(mid).getcID()) right = mid - 1;
+                else left = mid + 1;
+            }
+        }
+        return found;
+    }
+
+    /**
+     *
+     * @param email
+     * @return if our email the same that we set it before
+     */
+    public User findUser(String email){
+        User found = null;
+        int left = 0;
+        int right = users.size() - 1;
+
+        while(left < right && found == null){
+            int mid = (right + left) / 2;
+
+            if(users.get(mid).getEmail().equalsIgnoreCase(email)){
+                found = users.get(mid);
+            } else {
+                if(email.compareToIgnoreCase(courses.get(mid).getDesignation()) < 0) right = mid - 1;
+                else left = mid + 1;
+            }
+        }
+        return found;
+    }
+
+    /**
+     *
+     * @param uID
+     * @return if our uId the same that we set it before
+     */
+    public User findUser(int uID){
+        User found = null;
+        int left = 0;
+        int right = users.size() - 1;
+
+        while(left <= right && found == null){
+            int mid = (right + left) / 2;
+
+            if(users.get(mid).getuID() == uID){
+                found = users.get(mid);
+            } else {
+                if(uID < users.get(mid).getuID()) right = mid - 1;
+                else left = mid + 1;
+            }
+        }
+        return found;
+    }
     /**
      * create a random password
      *
@@ -106,5 +200,7 @@ public class StudentManager {
         }
         return false;
     }
+
+
 
 }

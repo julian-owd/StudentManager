@@ -46,4 +46,9 @@ public abstract class User {
     public void setEmail(String email) {
         this.email = email;
     }
+
+    @Override
+    public String toString() {
+        return "User{" + "uID=" + uID + ", lastName='" + lastName + '\'' + ", firstName='" + firstName + '\'' + ", email='" + email + '\'' + '}';
+    }
 }
