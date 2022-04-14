@@ -2,6 +2,8 @@ import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.util.*;
+
+import database.SQLManager;
 import user.*;
 import course.*;
 /**
@@ -9,96 +11,103 @@ import course.*;
  * @date 03.04.2022
  */
 public class StudentManager {
-    private ArrayList<Course> courses = new ArrayList<>();
-    private ArrayList<User> users = new ArrayList<>();
+
+    // variables for StudentManager
+    private ArrayList<Course> courses;
+    private ArrayList<User> users;
+    private SQLManager database;
+    private User currentUser;
+
+    /** Constructor which also connects it with the database */
+    public StudentManager() {
+        this.courses = new ArrayList<>();
+        this.users = new ArrayList<>();
+        this.database = new SQLManager("localhost", "studentmanager", "root", "", 3306);
+    }
 
     /**
+     * Search for a course based on its name
      *
-     * @param designation
-     * @return if our designation the same that we set it before
+     * @param designation the name of the course we're searching for
+     * @return the course we have searched for, if nothing was found then the return is null
      */
-    public Course findCourse(String designation){
+    public Course findCourse(String designation) {
+        for (Course course : this.courses) {
+            if (course.getDesignation().equalsIgnoreCase(designation)) {
+                return course;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Search for a course based on its id Important: The list must be sorted
+     *
+     * @param cID the id of the course we're searching for
+     * @return the course we have searched for, if nothing was found then the return is null
+     */
+    public Course findCourse(int cID) {
         Course found = null;
         int left = 0;
-        int right = courses.size() - 1;
+        int right = this.courses.size() - 1;
 
-        while(left <= right && found == null){
+        // as long as we haven't found it yet
+        while (left <= right && found == null) {
             int mid = (right + left) / 2;
 
-            if(courses.get(mid).getDesignation().equalsIgnoreCase(designation)){
-                found = courses.get(mid);
+            if (this.courses.get(mid).getcID() == cID) {
+                found = this.courses.get(mid);
             } else {
-                if(designation.compareToIgnoreCase(courses.get(mid).getDesignation()) < 0) right = mid - 1;
-                else left = mid + 1;
+                // decide whether our course is on the left or right side of the list
+                if (cID < this.courses.get(mid).getcID()) {
+                    right = mid - 1;
+                } else {
+                    left = mid + 1;
+                }
             }
         }
         return found;
     }
 
     /**
+     * Search for a user based on his email
      *
-     * @param cID
-     * @return if our cID the same that we set it before
+     * @param email the email of the user we're searching
+     * @return the user we have searched for, if nothing was found then the return is null
      */
-    public Course findCourse(int cID){
-        Course found = null;
-        int left = 0;
-        int right = courses.size() - 1;
-
-        while(left <= right && found == null){
-            int mid = (right + left) / 2;
-
-            if(courses.get(mid).getcID() == cID){
-                found = courses.get(mid);
-            } else {
-                if(cID < courses.get(mid).getcID()) right = mid - 1;
-                else left = mid + 1;
+    public User findUser(String email) {
+        for (User user : this.users) {
+            if (user.getEmail().equalsIgnoreCase(email)) {
+                return user;
             }
         }
-        return found;
+        return null;
     }
 
     /**
+     * Search for a user based on his id Important: The list must be sorted
      *
-     * @param email
-     * @return if our email the same that we set it before
+     * @param uID the id of the user we're searching
+     * @return the user we have searched for, if nothing was found then the return is null
      */
-    public User findUser(String email){
+    public User findUser(int uID) {
         User found = null;
         int left = 0;
-        int right = users.size() - 1;
+        int right = this.users.size() - 1;
 
-        while(left < right && found == null){
+        // as long as we haven't found him yet
+        while (left <= right && found == null) {
             int mid = (right + left) / 2;
 
-            if(users.get(mid).getEmail().equalsIgnoreCase(email)){
-                found = users.get(mid);
+            if (this.users.get(mid).getuID() == uID) {
+                found = this.users.get(mid);
             } else {
-                if(email.compareToIgnoreCase(courses.get(mid).getDesignation()) < 0) right = mid - 1;
-                else left = mid + 1;
-            }
-        }
-        return found;
-    }
-
-    /**
-     *
-     * @param uID
-     * @return if our uId the same that we set it before
-     */
-    public User findUser(int uID){
-        User found = null;
-        int left = 0;
-        int right = users.size() - 1;
-
-        while(left <= right && found == null){
-            int mid = (right + left) / 2;
-
-            if(users.get(mid).getuID() == uID){
-                found = users.get(mid);
-            } else {
-                if(uID < users.get(mid).getuID()) right = mid - 1;
-                else left = mid + 1;
+                // decide whether our user is on the left or right side of the list
+                if (uID < this.users.get(mid).getuID()) {
+                    right = mid - 1;
+                } else {
+                    left = mid + 1;
+                }
             }
         }
         return found;
@@ -111,37 +120,38 @@ public class StudentManager {
     public String generateRandomPassword() {
 
         // list of words to create the password with
-        List<String> words = Arrays.asList(
-                "Wasser",
-                "Cola",
-                "Fanta",
-                "Sprite",
-                "Kaffee",
-                "Tee",
-                "Baum",
-                "Katze",
-                "Hund",
-                "Mathe",
-                "Eis",
-                "Pommes",
-                "Zug",
-                "Bus",
-                "Flugzeug",
-                "Kuh",
-                "Huhn",
-                "Banane",
-                "Apfel",
-                "Berg",
-                "Handball",
-                "Tastatur",
-                "Maus",
-                "Mikrofon"
-        );
+        List<String> words =
+                Arrays.asList(
+                        "Wasser",
+                        "Cola",
+                        "Fanta",
+                        "Sprite",
+                        "Kaffee",
+                        "Tee",
+                        "Baum",
+                        "Katze",
+                        "Hund",
+                        "Mathe",
+                        "Eis",
+                        "Pommes",
+                        "Zug",
+                        "Bus",
+                        "Flugzeug",
+                        "Kuh",
+                        "Huhn",
+                        "Banane",
+                        "Apfel",
+                        "Berg",
+                        "Handball",
+                        "Tastatur",
+                        "Maus",
+                        "Mikrofon");
 
         Random random = new Random();
         StringBuilder stringBuilder = new StringBuilder();
 
-        List<Integer> usedIndexes = new ArrayList<>(); // list to put in the indexes that were already used
+        List<Integer> usedIndexes =
+                new ArrayList<>(); // list to put in the indexes that were already used
 
         for (int i = 0; i < 4; i++) { // 4 = select 4 random words for the password
             int randomIndex = random.nextInt(words.size()); // selects a randomIndex from the list
@@ -151,7 +161,8 @@ public class StudentManager {
             }
 
             stringBuilder.append(words.get(randomIndex)); // appends the word at the index randomIndex
-            usedIndexes.add(randomIndex); // adds the randomIndex to the used list because words are only used once
+            usedIndexes.add(
+                    randomIndex); // adds the randomIndex to the used list because words are only used once
         }
 
         return stringBuilder.toString();
@@ -176,12 +187,15 @@ public class StudentManager {
         properties.setProperty("mail.smtp.port", "587");
 
         // logging in with the account we want our emails to be sent from
-        Session session = Session.getInstance(properties, new Authenticator() {
-            @Override
-            protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication("projekt@julian-oswald.de", "e@T4fb8V_K");
-            }
-        });
+        Session session =
+                Session.getInstance(
+                        properties,
+                        new Authenticator() {
+                            @Override
+                            protected PasswordAuthentication getPasswordAuthentication() {
+                                return new PasswordAuthentication("projekt@julian-oswald.de", "e@T4fb8V_K");
+                            }
+                        });
 
         try {
             Message mimeMessage = new MimeMessage(session);
@@ -200,7 +214,4 @@ public class StudentManager {
         }
         return false;
     }
-
-
-
 }
