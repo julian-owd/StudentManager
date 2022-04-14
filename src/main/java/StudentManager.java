@@ -1,3 +1,5 @@
+import database.SQLManager;
+
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
@@ -8,6 +10,19 @@ import java.util.*;
  * @date 03.04.2022
  */
 public class StudentManager {
+
+    private SQLManager database;
+
+    public StudentManager() {
+        database = new SQLManager("localhost", "studentmanager", "root", "", 3306);
+    }
+
+    public boolean createUser(String lastName, String fistName, String email, boolean isTeacher) {
+        database.query("INSERT INTO users");
+        sendMail(email, "passwort", this.generateRandomPassword());
+        return false;
+    }
+
 
     /**
      * create a random password
