@@ -6,6 +6,7 @@ import java.util.*;
 import database.SQLManager;
 import user.*;
 import course.*;
+
 /**
  * @author Julian Oswald
  * @date 03.04.2022
@@ -18,11 +19,45 @@ public class StudentManager {
     private SQLManager database;
     private User currentUser;
 
-    /** Constructor which also connects it with the database */
+    /**
+     * Constructor which also connects it with the database
+     */
     public StudentManager() {
         this.courses = new ArrayList<>();
         this.users = new ArrayList<>();
         this.database = new SQLManager("localhost", "studentmanager", "root", "", 3306);
+    }
+
+    /**
+     * login into an existing account
+     *
+     * @param email    the email of the user
+     * @param password the password of the user
+     * @return if the login was successful, user can be found in variable currentUser
+     */
+    public boolean login(String email, String password) {
+        // the user is already logged in
+        if (this.currentUser != null) {
+            return false;
+        }
+
+        // getting the uID from the database
+        HashMap<Integer, ArrayList<String>> userData = this.database.getData("SELECT uID FROM user WHERE email='" + email + "' AND password='" + password + "'");
+        if (userData.size() != 0) {
+
+            // checking if it's a teacher or a student
+            HashMap<Integer, ArrayList<String>> teacherData = this.database.getData("SELECT uID FROM teacher WHERE uID=" + userData.get(0).get(0));
+            if (teacherData.size() != 0) { // teacher
+                User user = new Teacher(Integer.parseInt(userData.get(0).get(0)));
+                this.currentUser = user;
+            } else { // student
+                User user = new Student(Integer.parseInt(userData.get(0).get(0)));
+                this.currentUser = user;
+            }
+            return true;
+
+        }
+        return false;
     }
 
     /**
@@ -112,6 +147,7 @@ public class StudentManager {
         }
         return found;
     }
+
     /**
      * create a random password
      *
@@ -171,7 +207,7 @@ public class StudentManager {
     /**
      * send a mail
      *
-     * @param email the recipient of the mail
+     * @param email   the recipient of the mail
      * @param subject the topic of the mail
      * @param message the message in the mail
      * @return if the sending was successful
