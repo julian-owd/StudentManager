@@ -1,13 +1,15 @@
+import course.Course;
+import database.SQLManager;
+import lombok.Getter;
+import lombok.Setter;
+import user.Student;
+import user.Teacher;
+import user.User;
+
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.util.*;
-
-import database.SQLManager;
-import lombok.Getter;
-import lombok.Setter;
-import user.*;
-import course.*;
 
 /**
  * @author Julian Oswald
@@ -31,6 +33,22 @@ public class StudentManager {
         this.courses = new ArrayList<>();
         this.users = new ArrayList<>();
         this.database = new SQLManager("localhost", "studentmanager", "root", "", 3306);
+
+        // add the courses
+        HashMap<Integer, ArrayList<String>> dbCourses = this.database.getData("SELECT cID FROM course");
+        for (Integer i : dbCourses.keySet()) {
+            this.courses.add(new Course(Integer.parseInt(dbCourses.get(i).get(0))));
+        }
+
+        // add the users
+        HashMap<Integer, ArrayList<String>> dbUsers = this.database.getData("SELECT uID FROM user");
+        for (Integer i : dbUsers.keySet()) {
+            if (this.database.getData("SELECT uID FROM teacher WHERE uID=" + dbUsers.get(i).get(0)).isEmpty()) {
+                this.users.add(new Student(Integer.parseInt(dbUsers.get(i).get(0))));
+            } else {
+                this.users.add(new Teacher(Integer.parseInt(dbUsers.get(i).get(0))));
+            }
+        }
     }
 
     /**
@@ -40,7 +58,7 @@ public class StudentManager {
      * @param password the password of the user
      * @return if the login was successful, user can be found in variable currentUser
      */
-    public boolean login(String email, String password) {
+    public boolean logIn(String email, String password) {
         // the user is already logged in
         if (this.currentUser != null) {
             return false;
@@ -48,21 +66,26 @@ public class StudentManager {
 
         // getting the uID from the database
         HashMap<Integer, ArrayList<String>> userData = this.database.getData("SELECT uID FROM user WHERE email='" + email + "' AND password='" + password + "'");
-        if (userData.size() != 0) {
+        if (!userData.isEmpty()) {
 
-            // checking if it's a teacher or a student
-            HashMap<Integer, ArrayList<String>> teacherData = this.database.getData("SELECT uID FROM teacher WHERE uID=" + userData.get(0).get(0));
-            if (teacherData.size() != 0) { // teacher
-                User user = new Teacher(Integer.parseInt(userData.get(0).get(0)));
+            User user = this.findUser(Integer.parseInt(userData.get(0).get(0)));
+            if (user != null) {
                 this.currentUser = user;
-            } else { // student
-                User user = new Student(Integer.parseInt(userData.get(0).get(0)));
-                this.currentUser = user;
+                return true;
             }
-            return true;
-
         }
         return false;
+    }
+
+    /**
+     * logout from the current account
+     */
+    public void logOut() {
+        // there is no user logged in right now
+        if (this.currentUser == null) {
+            return;
+        }
+        this.currentUser = null;
     }
 
     /**
@@ -161,38 +184,12 @@ public class StudentManager {
     public String generateRandomPassword() {
 
         // list of words to create the password with
-        List<String> words =
-                Arrays.asList(
-                        "Wasser",
-                        "Cola",
-                        "Fanta",
-                        "Sprite",
-                        "Kaffee",
-                        "Tee",
-                        "Baum",
-                        "Katze",
-                        "Hund",
-                        "Mathe",
-                        "Eis",
-                        "Pommes",
-                        "Zug",
-                        "Bus",
-                        "Flugzeug",
-                        "Kuh",
-                        "Huhn",
-                        "Banane",
-                        "Apfel",
-                        "Berg",
-                        "Handball",
-                        "Tastatur",
-                        "Maus",
-                        "Mikrofon");
+        List<String> words = Arrays.asList("Wasser", "Cola", "Fanta", "Sprite", "Kaffee", "Tee", "Baum", "Katze", "Hund", "Mathe", "Eis", "Pommes", "Zug", "Bus", "Flugzeug", "Kuh", "Huhn", "Banane", "Apfel", "Berg", "Handball", "Tastatur", "Maus", "Mikrofon");
 
         Random random = new Random();
         StringBuilder stringBuilder = new StringBuilder();
 
-        List<Integer> usedIndexes =
-                new ArrayList<>(); // list to put in the indexes that were already used
+        List<Integer> usedIndexes = new ArrayList<>(); // list to put in the indexes that were already used
 
         for (int i = 0; i < 4; i++) { // 4 = select 4 random words for the password
             int randomIndex = random.nextInt(words.size()); // selects a randomIndex from the list
@@ -202,8 +199,7 @@ public class StudentManager {
             }
 
             stringBuilder.append(words.get(randomIndex)); // appends the word at the index randomIndex
-            usedIndexes.add(
-                    randomIndex); // adds the randomIndex to the used list because words are only used once
+            usedIndexes.add(randomIndex); // adds the randomIndex to the used list because words are only used once
         }
 
         return stringBuilder.toString();
@@ -228,15 +224,12 @@ public class StudentManager {
         properties.setProperty("mail.smtp.port", "587");
 
         // logging in with the account we want our emails to be sent from
-        Session session =
-                Session.getInstance(
-                        properties,
-                        new Authenticator() {
-                            @Override
-                            protected PasswordAuthentication getPasswordAuthentication() {
-                                return new PasswordAuthentication("projekt@julian-oswald.de", "e@T4fb8V_K");
-                            }
-                        });
+        Session session = Session.getInstance(properties, new Authenticator() {
+            @Override
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication("projekt@julian-oswald.de", "e@T4fb8V_K");
+            }
+        });
 
         try {
             Message mimeMessage = new MimeMessage(session);
