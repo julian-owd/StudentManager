@@ -1,11 +1,17 @@
 package course;
 
+import lombok.Getter;
+import lombok.ToString;
+
 /**
  * @author Elias Paul
  * @date 28.03.2022
  */
 
+@Getter
+@ToString
 public enum Weekday {
+
     MON("Montag"),
     TUE("Dienstag"),
     WED("Mittwoch"),
@@ -14,15 +20,7 @@ public enum Weekday {
 
     private String designation;
 
-    Weekday(String designation){
-        this.designation = designation;
-    }
-
-    public String getDesignation() {
-        return designation;
-    }
-
-    public void setDesignation(String designation) {
+    Weekday(String designation) {
         this.designation = designation;
     }
 }

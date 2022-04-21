@@ -1,11 +1,19 @@
 package user;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
 /**
  * @author Elias Paul
  * @date 28.03.2022
  */
 
+@Getter
+@Setter
+@ToString
 public abstract class User {
+
     private int uID;
     private String lastName;
     private String firstName;
@@ -13,42 +21,5 @@ public abstract class User {
 
     public User(int uID) {
         this.uID = uID;
-    }
-
-    public int getuID() {
-        return uID;
-    }
-
-    public void setuID(int uID) {
-        this.uID = uID;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    @Override
-    public String toString() {
-        return "User{" + "uID=" + uID + ", lastName='" + lastName + '\'' + ", firstName='" + firstName + '\'' + ", email='" + email + '\'' + '}';
     }
 }
