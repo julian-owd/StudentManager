@@ -4,6 +4,8 @@ import javax.mail.internet.MimeMessage;
 import java.util.*;
 
 import database.SQLManager;
+import lombok.Getter;
+import lombok.Setter;
 import user.*;
 import course.*;
 
@@ -11,6 +13,9 @@ import course.*;
  * @author Julian Oswald
  * @date 03.04.2022
  */
+
+@Getter
+@Setter
 public class StudentManager {
 
     // variables for StudentManager
@@ -90,11 +95,11 @@ public class StudentManager {
         while (left <= right && found == null) {
             int mid = (right + left) / 2;
 
-            if (this.courses.get(mid).getcID() == cID) {
+            if (this.courses.get(mid).getCID() == cID) {
                 found = this.courses.get(mid);
             } else {
                 // decide whether our course is on the left or right side of the list
-                if (cID < this.courses.get(mid).getcID()) {
+                if (cID < this.courses.get(mid).getCID()) {
                     right = mid - 1;
                 } else {
                     left = mid + 1;
@@ -134,11 +139,11 @@ public class StudentManager {
         while (left <= right && found == null) {
             int mid = (right + left) / 2;
 
-            if (this.users.get(mid).getuID() == uID) {
+            if (this.users.get(mid).getUID() == uID) {
                 found = this.users.get(mid);
             } else {
                 // decide whether our user is on the left or right side of the list
-                if (uID < this.users.get(mid).getuID()) {
+                if (uID < this.users.get(mid).getUID()) {
                     right = mid - 1;
                 } else {
                     left = mid + 1;
