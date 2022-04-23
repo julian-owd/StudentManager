@@ -1,7 +1,6 @@
 package course;
 
 import lombok.Getter;
-import lombok.ToString;
 
 /**
  * @author Elias Paul
@@ -9,7 +8,6 @@ import lombok.ToString;
  */
 
 @Getter
-@ToString
 public enum Weekday {
 
     MON("Montag"),
