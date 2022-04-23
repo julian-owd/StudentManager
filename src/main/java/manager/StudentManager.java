@@ -1,5 +1,8 @@
+package manager;
+
 import course.Course;
-import database.SQLManager;
+import course.Entry;
+import course.Homework;
 import lombok.Getter;
 import lombok.Setter;
 import user.Student;
@@ -20,7 +23,7 @@ import java.util.*;
 @Setter
 public class StudentManager {
 
-    // variables for StudentManager
+    // variables for manager.StudentManager
     private ArrayList<Course> courses;
     private ArrayList<User> users;
     private SQLManager database;
@@ -30,24 +33,24 @@ public class StudentManager {
      * Constructor which also connects it with the database
      */
     public StudentManager() {
+        this.database = new SQLManager("localhost", "studentmanager", "root", "", 3306);
         this.courses = new ArrayList<>();
         this.users = new ArrayList<>();
-        this.database = new SQLManager("localhost", "studentmanager", "root", "", 3306);
-
-        // add the courses
-        HashMap<Integer, ArrayList<String>> dbCourses = this.database.getData("SELECT cID FROM course");
-        for (Integer i : dbCourses.keySet()) {
-            this.courses.add(new Course(Integer.parseInt(dbCourses.get(i).get(0))));
-        }
 
         // add the users
         HashMap<Integer, ArrayList<String>> dbUsers = this.database.getData("SELECT uID FROM user");
         for (Integer i : dbUsers.keySet()) {
             if (this.database.getData("SELECT uID FROM teacher WHERE uID=" + dbUsers.get(i).get(0)).isEmpty()) {
-                this.users.add(new Student(Integer.parseInt(dbUsers.get(i).get(0))));
+                this.users.add(new Student(Integer.parseInt(dbUsers.get(i).get(0)), this));
             } else {
-                this.users.add(new Teacher(Integer.parseInt(dbUsers.get(i).get(0))));
+                this.users.add(new Teacher(Integer.parseInt(dbUsers.get(i).get(0)), this));
             }
+        }
+
+        // add the courses
+        HashMap<Integer, ArrayList<String>> dbCourses = this.database.getData("SELECT cID FROM course");
+        for (Integer i : dbCourses.keySet()) {
+            this.courses.add(new Course(Integer.parseInt(dbCourses.get(i).get(0)), this));
         }
     }
 
@@ -174,6 +177,26 @@ public class StudentManager {
             }
         }
         return found;
+    }
+
+    /**
+     * Search for a homework based on its id
+     *
+     * @param hID the id of the homework
+     * @return the homework we've searched for, if nothing found the return is null
+     */
+    public Homework findHomework(int hID) {
+        for (Course course : this.courses) {
+            for (Entry entry : course.getEntries()) {
+                if (entry.getHomework() == null) {
+                    continue;
+                }
+                if (hID == entry.getHomework().getHID()) {
+                    return entry.getHomework();
+                }
+            }
+        }
+        return null;
     }
 
     /**

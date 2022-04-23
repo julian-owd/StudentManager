@@ -1,4 +1,6 @@
-package database;
+package manager;
+
+import lombok.NoArgsConstructor;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -8,15 +10,17 @@ import java.util.HashMap;
  * @author Julian Oswald
  * @date 28.03.2022
  */
+
+@NoArgsConstructor
 public class SQLManager {
 
-    // variables for SQLManager to specify which database with which access level we want to use
+    // variables for SQLManager to specify which database with which user we want to use
     private Connection connection;
-    private String host;
-    private String database;
-    private String user;
-    private String password;
-    private int port;
+    private static String host;
+    private static String database;
+    private static String user;
+    private static String password;
+    private static int port;
 
     /**
      * Constructor with all the necessary variables
@@ -28,25 +32,40 @@ public class SQLManager {
      * @param port
      */
     public SQLManager(String host, String database, String user, String password, int port) {
-        this.host = host;
-        this.database = database;
-        this.user = user;
-        this.password = password;
-        this.port = port;
+        SQLManager.host = host;
+        SQLManager.database = database;
+        SQLManager.user = user;
+        SQLManager.password = password;
+        SQLManager.port = port;
 
         this.connect();
     }
 
-    // connects the program with the database
+    /**
+     * Connects with the database
+     */
     public void connect() {
         // if we are not connected yet, then go ahead
-        if (!isConnected()) {
-            String url = "jdbc:mysql://" + this.host + ":" + this.port + "/" + this.database;
+        if (!this.isConnected()) {
+            String url = "jdbc:mysql://" + SQLManager.host + ":" + SQLManager.port + "/" + SQLManager.database;
             try {
                 // establishing the connection, if there are any errors, they will be printed to the console
-                this.connection = DriverManager.getConnection(url, this.user, this.password);
+                this.connection = DriverManager.getConnection(url, SQLManager.user, SQLManager.password);
             } catch (SQLException e) {
                 e.printStackTrace();
+            }
+        }
+    }
+
+    /**
+     * Disconnects from the database
+     */
+    public void disconnect() {
+        if (this.isConnected()) {
+            try {
+                this.connection.close();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
             }
         }
     }
