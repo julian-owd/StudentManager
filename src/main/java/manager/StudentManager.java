@@ -2,6 +2,7 @@ package manager;
 
 import course.Course;
 import course.Entry;
+import course.Exam;
 import course.Homework;
 import lombok.Getter;
 import lombok.Setter;
@@ -266,9 +267,48 @@ public class StudentManager {
             // sending the mail
             Transport.send(mimeMessage);
             return true;
-        } catch (MessagingException e) { // catching erros so our program doesn't stop
+        } catch (MessagingException e) { // catching errors so our program doesn't stop
             e.printStackTrace();
         }
         return false;
+    }
+
+    /**
+     * adds a Homework to a specific Entry
+     *
+     * @param entry entry, in which the homework is added
+     * @param designation describes the homework
+     * @return returns true, if adding the homework was successful
+     */
+    public boolean addHomework(Entry entry, String designation) {
+        if (entry.getHomework() != null) {
+            return false;
+        }
+        this.database.query("INSERT INTO `homework` (`designation`,`eID`) VALUES ('" + designation + "','" + entry.getEID() + "')");
+        HashMap<Integer, ArrayList<String>> homeworkData = this.database.getData("SELECT hID FROM `homework` where `designation`='" + designation + "' AND `eID`=" + entry.getEID());
+        if (homeworkData.isEmpty()) {
+            return false;
+        }
+        entry.setHomework(new Homework(Integer.parseInt(homeworkData.get(0).get(0)), entry, this));
+        return true;
+    }
+
+    /**
+     * adds a specific exam to a course
+     *
+     * @param user the user, who is participating in the exam
+     * @param course course, in which the exam is held
+     * @param designation name of the exam
+     * @param grade grade :)
+     * @return returns true, if adding the homework was successful
+     */
+    public boolean addExam(User user, Course course, String designation, int grade) {
+        this.database.query("INSERT INTO `exam`(`designation`,`grade`,`cID`,`uID`) VALUES ('" + designation + "','" + grade + "','" + course.getCID() + "','" + user.getUID() + "')");
+        HashMap<Integer, ArrayList<String>> examData = this.database.getData("SELECT eID FROM `exam` WHERE designation='" + designation + "' AND grade=" + grade + " AND cID=" + course.getCID() + " AND uID=" + user.getUID());
+        if (examData.isEmpty()) {
+            return false;
+        }
+        course.getExams().add(new Exam(Integer.parseInt(examData.get(0).get(0)), course, this));
+        return true;
     }
 }
