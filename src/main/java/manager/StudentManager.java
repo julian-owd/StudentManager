@@ -3,6 +3,7 @@ package manager;
 import course.Course;
 import course.Entry;
 import course.Homework;
+import course.Weekday;
 import lombok.Getter;
 import lombok.Setter;
 import user.Student;
@@ -92,6 +93,89 @@ public class StudentManager {
     }
 
     /**
+     * Get a list of the courses the current user is a member of
+     *
+     * @return the list with courses
+     */
+    public ArrayList<Course> getMyCourses() {
+        ArrayList<Course> myCourses = new ArrayList<>();
+
+        for (Course course : this.courses) {
+            // if the user is a student or teacher in this specific course
+            if (course.getStudents().contains(this.currentUser) || course.getTeachers().contains(this.currentUser)) {
+                myCourses.add(course);
+            }
+        }
+
+        return myCourses;
+    }
+
+    /**
+     * Get a list of the homework which is relevant to the current user
+     *
+     * @return the list with homework
+     */
+    public ArrayList<Homework> getMyHomework() {
+        ArrayList<Homework> myHomework = new ArrayList<>();
+
+        for (Course course : this.courses) {
+            // if the user is a student or teacher in this specific course
+            if (course.getStudents().contains(this.currentUser)) {
+                for (Entry entry : course.getEntries()) {
+                    if (entry.getHomework() != null) {
+                        myHomework.add(entry.getHomework());
+                    }
+                }
+            }
+        }
+
+        return myHomework;
+    }
+
+    /**
+     * Get a list of the courses on this or the next day which are not going to take place
+     *
+     * @return the list with the courses not taking place
+     */
+    public ArrayList<String> getSubstitutionPlan() {
+        ArrayList<String> substitutionPlan = new ArrayList<>();
+
+        for (Course course : this.courses) {
+            // if the user is a student or teacher in this specific course
+            if (course.getStudents().contains(this.currentUser)) {
+                Weekday weekday = Weekday.MON;
+                int currentDay = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
+                // converting the currentDay into a weekday. Default Mon in case the user is looking on a weekend-day
+                switch (currentDay) {
+                    case Calendar.TUESDAY -> weekday = Weekday.TUE;
+                    case Calendar.WEDNESDAY -> weekday = Weekday.WED;
+                    case Calendar.THURSDAY -> weekday = Weekday.THR;
+                    case Calendar.FRIDAY -> weekday = Weekday.FRI;
+                }
+
+                for (Weekday days : course.getWeekdays()) {
+                    // whether the current or the next day
+                    if (weekday.compare(days) == 0 || weekday.compare(days) == 1) {
+                        boolean allSick = true;
+                        for (Teacher teacher : course.getTeachers()) {
+                            // checking if there is a single teacher who isn't sick in this course
+                            if (!teacher.isSick()) {
+                                allSick = false;
+                                break;
+                            }
+                        }
+                        if (allSick) {
+                            substitutionPlan.add(course.getDesignation());
+                        }
+                    }
+                }
+            }
+        }
+
+        return substitutionPlan;
+    }
+
+     /**
      * Search for a course based on its name
      *
      * @param designation the name of the course we're searching for
