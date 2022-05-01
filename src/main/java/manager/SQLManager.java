@@ -108,7 +108,7 @@ public class SQLManager {
                         "FOREIGN KEY(cID) REFERENCES course(cID))");
 
                 // create table student_entry
-                statement.executeUpdate("CREATE TABLE IF NOT EXISTS stundent_entry " +
+                statement.executeUpdate("CREATE TABLE IF NOT EXISTS student_entry " +
                         "(uID INT(8) NOT NULL, " +
                         "eID INT(8) NOT NULL, " +
                         "PRIMARY KEY(uID, eID), " +
@@ -116,7 +116,7 @@ public class SQLManager {
                         "FOREIGN KEY(eID) REFERENCES entry(eID))");
 
                 // create table student_exam
-                statement.executeUpdate("CREATE TABLE IF NOT EXISTS stundent_exam " +
+                statement.executeUpdate("CREATE TABLE IF NOT EXISTS student_exam " +
                         "(uID INT(8) NOT NULL, " +
                         "eID INT(8) NOT NULL, " +
                         "PRIMARY KEY(uID, eID), " +
@@ -124,7 +124,7 @@ public class SQLManager {
                         "FOREIGN KEY(eID) REFERENCES exam(eID))");
 
                 // create table student_homework
-                statement.executeUpdate("CREATE TABLE IF NOT EXISTS stundent_homework " +
+                statement.executeUpdate("CREATE TABLE IF NOT EXISTS student_homework " +
                         "(uID INT(8) NOT NULL, " +
                         "hID INT(8) NOT NULL, " +
                         "PRIMARY KEY(uID, hID), " +
