@@ -53,6 +53,13 @@ public class StudentManager {
         for (Integer i : dbCourses.keySet()) {
             this.courses.add(new Course(Integer.parseInt(dbCourses.get(i).get(0)), this));
         }
+
+        // loading the homework after loaded every course to prevent homework that is null
+        for (User u : this.users) {
+            if (u instanceof Student) {
+                ((Student) u).loadHomework(this);
+            }
+        }
     }
 
     /**
@@ -173,6 +180,114 @@ public class StudentManager {
         }
 
         return substitutionPlan;
+    }
+
+    /**
+     * Create a user
+     *
+     * @param lastName the lastName of the user
+     * @param firstName the firstName of the user
+     * @param email the email of the user
+     * @param isTeacher whether the user is a teacher
+     * @return true if the creation was successful, false if not
+     */
+    public boolean createUser(String lastName, String firstName, String email, boolean isTeacher) {
+        // checking if the email is already in use
+        if (this.findUser(email) != null) {
+            return false;
+        }
+        String password = this.generateRandomPassword();
+
+        this.database.query("INSERT INTO user(lastName, firstName, email, password) VALUES ('" + lastName + "', '" + firstName + "', '" + email + "', '" + password + "')");
+        HashMap<Integer, ArrayList<String>> userData = this.database.getData("SELECT uID FROM user WHERE email='" + email + "' AND lastName='" + lastName + "' AND firstName='" + firstName+"'");
+
+        // if the HashMap is empty, we failed to add him into the database
+        if (userData.isEmpty()) {
+            return false;
+        }
+        int uID = Integer.parseInt(userData.get(0).get(0));
+
+        // adding him into the running system
+        if (isTeacher) {
+            this.database.query("INSERT INTO teacher(isSick, isAdmin, uID) VALUES (0, 0, " + uID + ")");
+            this.users.add(new Teacher(uID, this));
+        } else {
+            this.users.add(new Student(uID, this));
+        }
+
+        return this.sendMail(email, "Dein Zugangspasswort", "Dein Passwort für das Schulportal lautet: " + password);
+    }
+
+    /**
+     * Delete an existing user
+     *
+     * @param user the user to delete
+     * @return true if deleting the user was successful, false if not
+     */
+    public boolean deleteUser(User user) {
+        // checking if the user object is null
+        if (user == null) {
+            return false;
+        }
+
+        // evaluating whether the user is a teacher or a student
+        if (user instanceof Teacher) {
+            this.database.query("DELETE FROM teacher_course WHERE uID=" + user.getUID());
+            this.database.query("DELETE FROM teacher WHERE uID=" + user.getUID());
+            this.database.query("DELETE FROM user WHERE uID=" + user.getUID());
+            return true;
+        } else if (user instanceof Student) {
+            this.database.query("DELETE FROM student_course WHERE uID=" + user.getUID());
+            this.database.query("DELETE FROM student_entry WHERE uID=" + user.getUID());
+            this.database.query("DELETE FROM student_homework WHERE uID=" + user.getUID());
+            this.database.query("DELETE FROM student_exam WHERE uID=" + user.getUID());
+            this.database.query("DELETE FROM user WHERE uID=" + user.getUID());
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Reset the password of a user
+     *
+     * @param user the user whose password is being reset
+     * @return true if the reset was successful, false if not
+     */
+    public boolean resetUserPassword(User user) {
+        // checking if the user object is null
+        if (user == null) {
+            return false;
+        }
+        String newPassword = this.generateRandomPassword(); // generating a new password
+        this.database.query("UPDATE user SET password='" + newPassword+"' WHERE uID=" + user.getUID()); // updating the password in the database
+        return this.sendMail(user.getEmail(), "Dein neues Zugangspasswort", "Dein neues Passwort für das Schulportal lautet: " + newPassword); // sending a mail with the new password
+    }
+
+    public void markHomeworkAsFinished(Homework homework) {
+        // if the current user is not a student he can't mark a homework as finished
+        if (!(this.currentUser instanceof Student)) {
+            return;
+        }
+        Student student = (Student) this.currentUser;
+
+        boolean alreadyFinished = false;
+        for (Homework h : student.getDoneHomework()) {
+            if (h.getHID() == homework.getHID()) {
+                alreadyFinished = true;
+                break;
+            }
+        }
+
+        // checking if the user has already done the homework
+        if (alreadyFinished) {
+            // marking the homework as unfinished
+            student.getDoneHomework().remove(homework);
+            this.database.query("DELETE FROM student_homework WHERE uID=" + student.getUID() + " AND hID=" + homework.getHID());
+            return;
+        }
+        student.getDoneHomework().add(homework);
+        database.query("INSERT INTO student_homework VALUES (" + student.getUID() + ", " + homework.getHID() + ")");
     }
 
      /**
