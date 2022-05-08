@@ -185,9 +185,9 @@ public class StudentManager {
     /**
      * Create a user
      *
-     * @param lastName the lastName of the user
+     * @param lastName  the lastName of the user
      * @param firstName the firstName of the user
-     * @param email the email of the user
+     * @param email     the email of the user
      * @param isTeacher whether the user is a teacher
      * @return true if the creation was successful, false if not
      */
@@ -199,7 +199,7 @@ public class StudentManager {
         String password = this.generateRandomPassword();
 
         this.database.query("INSERT INTO user(lastName, firstName, email, password) VALUES ('" + lastName + "', '" + firstName + "', '" + email + "', '" + password + "')");
-        HashMap<Integer, ArrayList<String>> userData = this.database.getData("SELECT uID FROM user WHERE email='" + email + "' AND lastName='" + lastName + "' AND firstName='" + firstName+"'");
+        HashMap<Integer, ArrayList<String>> userData = this.database.getData("SELECT uID FROM user WHERE email='" + email + "' AND lastName='" + lastName + "' AND firstName='" + firstName + "'");
 
         // if the HashMap is empty, we failed to add him into the database
         if (userData.isEmpty()) {
@@ -260,7 +260,7 @@ public class StudentManager {
             return false;
         }
         String newPassword = this.generateRandomPassword(); // generating a new password
-        this.database.query("UPDATE user SET password='" + newPassword+"' WHERE uID=" + user.getUID()); // updating the password in the database
+        this.database.query("UPDATE user SET password='" + newPassword + "' WHERE uID=" + user.getUID()); // updating the password in the database
         return this.sendMail(user.getEmail(), "Dein neues Zugangspasswort", "Dein neues Passwort für das Schulportal lautet: " + newPassword); // sending a mail with the new password
     }
 
@@ -290,7 +290,27 @@ public class StudentManager {
         database.query("INSERT INTO student_homework VALUES (" + student.getUID() + ", " + homework.getHID() + ")");
     }
 
-     /**
+    /**
+     * Removes a user from a course
+     *
+     * @param user   the user to remove from the course
+     * @param course the course to remove a user from
+     * @return true if the removing was successful, false if not
+     */
+    public boolean removeUserFromCourse(User user, Course course) {
+        if (course.getStudents().contains(user) || course.getTeachers().contains(user)) {
+            if (user instanceof Teacher) {
+                this.database.query("DELETE FROM teacher_course WHERE uID=" + user.getUID() + " AND cID=" + course.getCID());
+            } else {
+                this.database.query("DELETE FROM student_course WHERE uID=" + user.getUID() + " AND cID=" + course.getCID());
+            }
+            course.getStudents().remove(user);
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * Search for a course based on its name
      *
      * @param designation the name of the course we're searching for
