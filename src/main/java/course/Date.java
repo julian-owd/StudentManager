@@ -20,6 +20,23 @@ public class Date {
         day = Integer.parseInt(splittedDate[2]);
     }
 
+    public String toSQLString() {
+        StringBuilder builder = new StringBuilder();
+
+        if (month < 10) {
+            builder.append(year).append("-").append(0).append(month).append("-");
+        } else {
+            builder.append(year).append("-").append(month).append("-");
+        }
+        if (day < 10) {
+            builder.append(0).append(day);
+        } else {
+            builder.append(day);
+        }
+
+        return builder.toString();
+    }
+
     public String toString() {
         StringBuilder builder = new StringBuilder();
 

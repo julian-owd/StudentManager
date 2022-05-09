@@ -1,14 +1,9 @@
 package manager;
 
-import course.Course;
-import course.Entry;
-import course.Homework;
-import course.Weekday;
+import course.*;
 import lombok.Getter;
 import lombok.Setter;
-import user.Student;
-import user.Teacher;
-import user.User;
+import user.*;
 
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
@@ -98,7 +93,7 @@ public class StudentManager {
         }
         this.currentUser = null;
     }
-
+  
     /**
      * Get a list of the courses the current user is a member of
      *
@@ -264,6 +259,133 @@ public class StudentManager {
         return this.sendMail(user.getEmail(), "Dein neues Zugangspasswort", "Dein neues Passwort für das Schulportal lautet: " + newPassword); // sending a mail with the new password
     }
 
+    /**
+     * adds user to the course
+     *
+     * @param user   user that is added to the course
+     * @param course course that the student is added to
+     * @return returns true if method was successful
+     */
+    public boolean addUserToCourse(ArrayList<User> user, Course course) {
+        for (User u : user) {
+            if (u instanceof Student) {
+                this.database.query("INSERT INTO `student_course` VALUES (" + u.getUID() + "," + course.getCID() + ")");
+            } else {
+                this.database.query("INSERT INTO `teacher_course` VALUES (" + u.getUID() + "," + course.getCID() + ")");
+            }
+            return true;
+        }
+        return true;
+    }
+  
+    /**
+     * Removes a user from a course
+     *
+     * @param user   the user to remove from the course
+     * @param course the course to remove a user from
+     * @return true if the removing was successful, false if not
+     */
+    public boolean removeUserFromCourse(User user, Course course) {
+        if (course.getStudents().contains(user) || course.getTeachers().contains(user)) {
+            if (user instanceof Teacher) {
+                this.database.query("DELETE FROM teacher_course WHERE uID=" + user.getUID() + " AND cID=" + course.getCID());
+            } else {
+                this.database.query("DELETE FROM student_course WHERE uID=" + user.getUID() + " AND cID=" + course.getCID());
+            }
+            course.getStudents().remove(user);
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * adds a new course
+     *
+     * @param designation name of the course
+     * @param weekdays    weekdays in which the course is held
+     * @return returns true if method was successful
+     */
+    public boolean addCourse(String designation, ArrayList<Integer> weekdays) {
+        this.database.query("INSERT INTO `course` (`designation`) VALUES ('" + designation + "')");
+        HashMap<Integer, ArrayList<String>> courseData = this.database.getData("SELECT cID FROM `course` where `designation`= '" + designation + "'");
+        if (courseData.isEmpty()) {
+            return false;
+        }
+        for (Integer weekday : weekdays) {
+            this.database.query("INSERT INTO `course_weekday` VALUES (" + Integer.parseInt(courseData.get(0).get(0)) + "," + weekday + ")");
+        }
+        getCourses().add(new Course(Integer.parseInt(courseData.get(0).get(0)), this));
+        return true;
+    }
+
+    /**
+     * adds a new entry
+     *
+     * @param course       course that is assigned to the entry
+     * @param date         date of the entry
+     * @param title        title of the entry
+     * @param description  describes the entry
+     * @param participants list of participants
+     * @return returns true if the method was successful
+     */
+    public boolean addEntry(Course course, Date date, String title, String description, ArrayList<Student> participants) {
+        this.database.query("INSERT INTO `entry` (`date`,`title`,`description`,`cID`) VALUES ('" + date.toSQLString() + "','" + title + "','" + description + "','" + course.getCID() + "')");
+        HashMap<Integer, ArrayList<String>> entryData = this.database.getData("SELECT eID FROM `entry` where `date`= '" + date.toSQLString() + "' AND `title`= '" + title + "' AND `description`= '" + description + "' AND cID= " + course.getCID());
+        if (entryData.isEmpty()) {
+            return false;
+        }
+        for (Student student : participants) {
+            this.database.query("INSERT INTO `student_entry` VALUES (" + student.getUID() + "," + Integer.parseInt(entryData.get(0).get(0)) + ")");
+        }
+        course.getEntries().add(new Entry(Integer.parseInt(entryData.get(0).get(0)), course, this));
+        return true;
+    }
+
+
+    /**
+     * adds Homework to a specific Entry
+     *
+     * @param entry       entry, in which the homework is added
+     * @param designation describes the homework
+     * @return returns true, if adding the homework was successful
+     */
+    public boolean addHomework(Entry entry, String designation) {
+        if (entry.getHomework() != null) {
+            return false;
+        }
+        this.database.query("INSERT INTO `homework` (`designation`,`eID`) VALUES ('" + designation + "','" + entry.getEID() + "')");
+        HashMap<Integer, ArrayList<String>> homeworkData = this.database.getData("SELECT hID FROM `homework` where `designation`='" + designation + "' AND `eID`=" + entry.getEID());
+        if (homeworkData.isEmpty()) {
+            return false;
+        }
+        entry.setHomework(new Homework(Integer.parseInt(homeworkData.get(0).get(0)), entry, this));
+        return true;
+    }
+
+    /**
+     * adds a specific exam to a course
+     *
+     * @param user        the user, who is participating in the exam
+     * @param course      course, in which the exam is held
+     * @param designation name of the exam
+     * @param grade       grade :)
+     * @return returns true, if adding the homework was successful
+     */
+    public boolean addExam(User user, Course course, String designation, int grade) {
+        this.database.query("INSERT INTO `exam`(`designation`,`grade`,`cID`,`uID`) VALUES ('" + designation + "','" + grade + "','" + course.getCID() + "','" + user.getUID() + "')");
+        HashMap<Integer, ArrayList<String>> examData = this.database.getData("SELECT eID FROM `exam` WHERE designation='" + designation + "' AND grade=" + grade + " AND cID=" + course.getCID() + " AND uID=" + user.getUID());
+        if (examData.isEmpty()) {
+            return false;
+        }
+        course.getExams().add(new Exam(Integer.parseInt(examData.get(0).get(0)), course, this));
+        return true;
+    }
+
+    /**
+     * Mark a homework as finished by the current user
+     *
+     * @param homework the homework which was finished
+     */
     public void markHomeworkAsFinished(Homework homework) {
         // if the current user is not a student he can't mark a homework as finished
         if (!(this.currentUser instanceof Student)) {
@@ -291,26 +413,6 @@ public class StudentManager {
     }
 
     /**
-     * Removes a user from a course
-     *
-     * @param user   the user to remove from the course
-     * @param course the course to remove a user from
-     * @return true if the removing was successful, false if not
-     */
-    public boolean removeUserFromCourse(User user, Course course) {
-        if (course.getStudents().contains(user) || course.getTeachers().contains(user)) {
-            if (user instanceof Teacher) {
-                this.database.query("DELETE FROM teacher_course WHERE uID=" + user.getUID() + " AND cID=" + course.getCID());
-            } else {
-                this.database.query("DELETE FROM student_course WHERE uID=" + user.getUID() + " AND cID=" + course.getCID());
-            }
-            course.getStudents().remove(user);
-            return true;
-        }
-        return false;
-    }
-
-    /**
      * Search for a course based on its name
      *
      * @param designation the name of the course we're searching for
@@ -324,6 +426,7 @@ public class StudentManager {
         }
         return null;
     }
+
 
     /**
      * Search for a course based on its id Important: The list must be sorted
@@ -485,9 +588,11 @@ public class StudentManager {
             // sending the mail
             Transport.send(mimeMessage);
             return true;
-        } catch (MessagingException e) { // catching erros so our program doesn't stop
+        } catch (MessagingException e) { // catching errors so our program doesn't stop
             e.printStackTrace();
         }
         return false;
     }
+
+
 }
