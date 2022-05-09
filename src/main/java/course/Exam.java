@@ -28,10 +28,11 @@ public class Exam {
         this.eID = eID;
         this.course = course;
 
-        HashMap<Integer, ArrayList<String>> examData = studentManager.getDatabase().getData("SELECT designation, grade FROM exam WHERE eID=" + eID);
+        HashMap<Integer, ArrayList<String>> examData = studentManager.getDatabase().getData("SELECT designation, grade, uID FROM exam WHERE eID=" + eID);
         if (!examData.isEmpty()) {
             this.designation = examData.get(0).get(0);
             this.grade = Integer.parseInt(examData.get(0).get(1));
+            this.student = (Student) studentManager.findUser(Integer.parseInt(examData.get(0).get(2)));
         }
     }
 
