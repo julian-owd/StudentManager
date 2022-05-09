@@ -39,6 +39,118 @@ public class SQLManager {
         this.port = port;
 
         this.connect();
+
+        // Create database & tables
+        if (this.isConnected()) {
+            try {
+                Statement statement = this.connection.createStatement();
+
+                // use executeUpdate for DDL statements
+                statement.executeUpdate("CREATE DATABASE IF NOT EXISTS " + this.database); // create the database
+                statement.executeUpdate("USE " + this.database); // use database
+
+                // create table user
+                statement.executeUpdate("CREATE TABLE IF NOT EXISTS user " +
+                        "(uID INT(8) NOT NULL AUTO_INCREMENT, " +
+                        "lastName VARCHAR(50) NOT NULL, " +
+                        "firstName VARCHAR(50) NOT NULL, " +
+                        "email VARCHAR(50) NOT NULL, " +
+                        "password VARCHAR(50) NOT NULL, " +
+                        "PRIMARY KEY(uID))");
+
+                // create table teacher
+                statement.executeUpdate("CREATE TABLE IF NOT EXISTS teacher " +
+                        "(isSick TINYINT(1) NOT NULL, " +
+                        "isAdmin TINYINT(1) NOT NULL, " +
+                        "uID INT(8) NOT NULL, " +
+                        "PRIMARY KEY(uID), " +
+                        "FOREIGN KEY(uID) REFERENCES user(uID))");
+
+                // create table course
+                statement.executeUpdate("CREATE TABLE IF NOT EXISTS course " +
+                        "(cID INT(8) NOT NULL AUTO_INCREMENT, " +
+                        "designation VARCHAR(50) NOT NULL, " +
+                        "PRIMARY KEY(cID))");
+
+                // create table entry
+                statement.executeUpdate("CREATE TABLE IF NOT EXISTS entry " +
+                        "(eID INT(8) NOT NULL AUTO_INCREMENT, " +
+                        "date DATE NOT NULL, " +
+                        "title VARCHAR(50) NOT NULL, " +
+                        "description VARCHAR(50) NOT NULL, " +
+                        "cID INT(8)," +
+                        "PRIMARY KEY(eID)," +
+                        "FOREIGN KEY(cID) REFERENCES course(cID))");
+
+                // create table exam
+                statement.executeUpdate("CREATE TABLE IF NOT EXISTS exam " +
+                        "(eID INT(8) NOT NULL AUTO_INCREMENT, " +
+                        "designation VARCHAR(50) NOT NULL, " +
+                        "grade INT(8) NOT NULL, " +
+                        "cID INT(8)," +
+                        "PRIMARY KEY(eID)," +
+                        "FOREIGN KEY(cID) REFERENCES course(cID))");
+
+                // create table homework
+                statement.executeUpdate("CREATE TABLE IF NOT EXISTS homework " +
+                        "(hID INT(8) NOT NULL AUTO_INCREMENT, " +
+                        "designation VARCHAR(50) NOT NULL, " +
+                        "eID INT(8)," +
+                        "PRIMARY KEY(hID)," +
+                        "FOREIGN KEY(eID) REFERENCES entry(eID))");
+
+                // create table student_course
+                statement.executeUpdate("CREATE TABLE IF NOT EXISTS student_course " +
+                        "(uID INT(8) NOT NULL, " +
+                        "cID INT(8) NOT NULL, " +
+                        "PRIMARY KEY(uID, cID), " +
+                        "FOREIGN KEY(uID) REFERENCES user(uID), " +
+                        "FOREIGN KEY(cID) REFERENCES course(cID))");
+
+                // create table student_entry
+                statement.executeUpdate("CREATE TABLE IF NOT EXISTS student_entry " +
+                        "(uID INT(8) NOT NULL, " +
+                        "eID INT(8) NOT NULL, " +
+                        "PRIMARY KEY(uID, eID), " +
+                        "FOREIGN KEY(uID) REFERENCES user(uID), " +
+                        "FOREIGN KEY(eID) REFERENCES entry(eID))");
+
+                // create table student_exam
+                statement.executeUpdate("CREATE TABLE IF NOT EXISTS student_exam " +
+                        "(uID INT(8) NOT NULL, " +
+                        "eID INT(8) NOT NULL, " +
+                        "PRIMARY KEY(uID, eID), " +
+                        "FOREIGN KEY(uID) REFERENCES user(uID), " +
+                        "FOREIGN KEY(eID) REFERENCES exam(eID))");
+
+                // create table student_homework
+                statement.executeUpdate("CREATE TABLE IF NOT EXISTS student_homework " +
+                        "(uID INT(8) NOT NULL, " +
+                        "hID INT(8) NOT NULL, " +
+                        "PRIMARY KEY(uID, hID), " +
+                        "FOREIGN KEY(uID) REFERENCES user(uID), " +
+                        "FOREIGN KEY(hID) REFERENCES homework(hID))");
+
+                // create table teacher_course
+                statement.executeUpdate("CREATE TABLE IF NOT EXISTS teacher_course " +
+                        "(uID INT(8) NOT NULL, " +
+                        "cID INT(8) NOT NULL, " +
+                        "PRIMARY KEY(uID, cID), " +
+                        "FOREIGN KEY(uID) REFERENCES user(uID), " +
+                        "FOREIGN KEY(cID) REFERENCES course(cID))");
+
+                // create table course_weekday
+                statement.executeUpdate("CREATE TABLE IF NOT EXISTS course_weekday " +
+                        "(cID INT(8) NOT NULL, " +
+                        "weekday INT(8) NOT NULL, " +
+                        "PRIMARY KEY(cID, weekday), " +
+                        "FOREIGN KEY(cID) REFERENCES course(cID))");
+
+                statement.close();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 
     /**
@@ -47,7 +159,7 @@ public class SQLManager {
     public void connect() {
         // if we are not connected yet, then go ahead
         if (!this.isConnected()) {
-            String url = "jdbc:mysql://" + this.host + ":" + this.port + "/" + this.database;
+            String url = "jdbc:mysql://" + this.host + ":" + this.port;
             try {
                 // establishing the connection, if there are any errors, they will be printed to the console
                 this.connection = DriverManager.getConnection(url, this.user, this.password);
