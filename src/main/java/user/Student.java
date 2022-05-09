@@ -9,6 +9,8 @@ import manager.StudentManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author Elias Paul
@@ -24,8 +26,17 @@ public class Student extends User {
     public Student(int uID, StudentManager studentManager) {
         super(uID, studentManager);
         this.doneHomework = new ArrayList<>();
+    }
 
-        HashMap<Integer, ArrayList<String>> homeworkData = studentManager.getDatabase().getData("SELECT hID FROM student_homework WHERE uID=" + uID);
+    /**
+     * Load the homework which is already done by the student
+     *
+     * @param studentManager instance of StudentManager for database connection
+     */
+    public void loadHomework(StudentManager studentManager) {
+        this.doneHomework = new ArrayList<>();
+
+        HashMap<Integer, ArrayList<String>> homeworkData = studentManager.getDatabase().getData("SELECT hID FROM student_homework WHERE uID=" + this.getUID());
         for (Integer i : homeworkData.keySet()) {
             this.doneHomework.add(studentManager.findHomework(Integer.parseInt(homeworkData.get(i).get(0))));
         }
