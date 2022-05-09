@@ -236,7 +236,6 @@ public class StudentManager {
             this.database.query("DELETE FROM student_course WHERE uID=" + user.getUID());
             this.database.query("DELETE FROM student_entry WHERE uID=" + user.getUID());
             this.database.query("DELETE FROM student_homework WHERE uID=" + user.getUID());
-            this.database.query("DELETE FROM student_exam WHERE uID=" + user.getUID());
             this.database.query("DELETE FROM user WHERE uID=" + user.getUID());
             return true;
         } else {
