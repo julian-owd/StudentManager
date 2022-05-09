@@ -88,8 +88,10 @@ public class SQLManager {
                         "designation VARCHAR(50) NOT NULL, " +
                         "grade INT(8) NOT NULL, " +
                         "cID INT(8)," +
+                        "uID INT(8)," +
                         "PRIMARY KEY(eID)," +
-                        "FOREIGN KEY(cID) REFERENCES course(cID))");
+                        "FOREIGN KEY(cID) REFERENCES course(cID)," +
+                        "FOREIGN KEY(uID) REFERENCES user(uID))");
 
                 // create table homework
                 statement.executeUpdate("CREATE TABLE IF NOT EXISTS homework " +
@@ -114,14 +116,6 @@ public class SQLManager {
                         "PRIMARY KEY(uID, eID), " +
                         "FOREIGN KEY(uID) REFERENCES user(uID), " +
                         "FOREIGN KEY(eID) REFERENCES entry(eID))");
-
-                // create table student_exam
-                statement.executeUpdate("CREATE TABLE IF NOT EXISTS student_exam " +
-                        "(uID INT(8) NOT NULL, " +
-                        "eID INT(8) NOT NULL, " +
-                        "PRIMARY KEY(uID, eID), " +
-                        "FOREIGN KEY(uID) REFERENCES user(uID), " +
-                        "FOREIGN KEY(eID) REFERENCES exam(eID))");
 
                 // create table student_homework
                 statement.executeUpdate("CREATE TABLE IF NOT EXISTS student_homework " +

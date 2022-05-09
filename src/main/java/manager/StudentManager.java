@@ -1,6 +1,7 @@
 package manager;
 
 import course.*;
+import course.Date;
 import lombok.Getter;
 import lombok.Setter;
 import user.*;
@@ -559,7 +560,11 @@ public class StudentManager {
      * @return if the sending was successful
      */
     public boolean sendMail(String email, String subject, String message) {
-        // which mail server we want to use and some properties of it
+        System.out.println("Die sendMail-Methode ist nicht für Vorführungszwecke verfügbar, " +
+                "da die Domain auf mich (Julian) läuft und potenziell missbraucht werden könnte. " +
+                "Falls eine Vorführung gewünscht ist, kann dies in Präsenz erfolgen.");
+        return true;
+        /*// which mail server we want to use and some properties of it
         Properties properties = System.getProperties();
         properties.setProperty("mail.smtp.auth", "true");
         properties.setProperty("mail.smtp.starttls.enable", "true");
@@ -591,7 +596,7 @@ public class StudentManager {
         } catch (MessagingException e) { // catching errors so our program doesn't stop
             e.printStackTrace();
         }
-        return false;
+        return false;*/
     }
 
 
