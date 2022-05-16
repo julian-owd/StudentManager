@@ -260,6 +260,22 @@ public class StudentManager {
     }
 
     /**
+     * Change the email of a user
+     *
+     * @param user
+     * @param email
+     */
+    public void changeUserEmail(User user, String email) {
+        user.setEmail(email);
+        this.database.query("UPDATE user SET email='" + email + "' WHERE uID=" + user.getUID());
+    }
+
+    public void changeUserPassword(User user, String password) {
+        user.setPassword(password);
+        this.database.query("UPDATE user SET password='" + password + "' WHERE uID=" + user.getUID());
+    }
+
+    /**
      * adds user to the course
      *
      * @param user   user that is added to the course

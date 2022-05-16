@@ -22,15 +22,17 @@ public abstract class User {
     private String lastName;
     private String firstName;
     private String email;
+    private String password;
 
     public User(int uID, StudentManager studentManager) {
         this.uID = uID;
 
-        HashMap<Integer, ArrayList<String>> userData = studentManager.getDatabase().getData("SELECT lastName, firstName, email FROM user WHERE uID=" + uID);
+        HashMap<Integer, ArrayList<String>> userData = studentManager.getDatabase().getData("SELECT lastName, firstName, email, password FROM user WHERE uID=" + uID);
         if (!userData.isEmpty()) {
             this.lastName = userData.get(0).get(0);
             this.firstName = userData.get(0).get(1);
             this.email = userData.get(0).get(2);
+            this.password = userData.get(0).get(3);
         }
     }
 }

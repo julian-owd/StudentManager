@@ -17,7 +17,7 @@ public class Login {
         // configuring jFrame
         jFrame.setTitle("Login - Schulportal");
         jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        jFrame.setContentPane(panel1);
+        jFrame.setContentPane(this.panel1);
         jFrame.setPreferredSize(new Dimension(500, 200));
         jFrame.pack();
         jFrame.setLocationRelativeTo(null);
@@ -37,7 +37,6 @@ public class Login {
 
                 // checking if we can log in the user
                 if (studentManager.logIn(emailField.getText(), String.copyValueOf(passwortField.getPassword()))) {
-                    System.out.println("Opening overview");
                     panel1.setVisible(false);
                     new MainMenu(jFrame, studentManager);
                 } else {
