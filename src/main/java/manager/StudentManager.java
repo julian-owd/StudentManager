@@ -262,17 +262,36 @@ public class StudentManager {
     /**
      * Change the email of a user
      *
-     * @param user
-     * @param email
+     * @param user the user to set a new email
+     * @param email the new email
      */
     public void changeUserEmail(User user, String email) {
         user.setEmail(email);
         this.database.query("UPDATE user SET email='" + email + "' WHERE uID=" + user.getUID());
     }
 
+    /**
+     * Change the password of a user
+     *
+     * @param user the user to set a new passwort
+     * @param password the new password
+     */
     public void changeUserPassword(User user, String password) {
         user.setPassword(password);
         this.database.query("UPDATE user SET password='" + password + "' WHERE uID=" + user.getUID());
+    }
+
+    public void changeUserPresenceStatus(User user, boolean b) {
+        int i;
+        if (b) {
+            i = 1;
+        } else {
+            i = 0;
+        }
+        if (user instanceof Teacher t) {
+            t.setSick(b);
+            this.database.query("UPDATE teacher SET isSick='" + i + "' WHERE uID=" + user.getUID());
+        }
     }
 
     /**

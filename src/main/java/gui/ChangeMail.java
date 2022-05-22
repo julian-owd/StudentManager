@@ -16,7 +16,7 @@ public class ChangeMail {
     public ChangeMail(StudentManager studentManager) {
         // configuring jFrame
         JFrame jFrame = new JFrame();
-        jFrame.setTitle("Login - Schulportal");
+        jFrame.setTitle("E-Mail-Adresse ändern - Schulportal");
         jFrame.setContentPane(this.panel1);
         jFrame.setPreferredSize(new Dimension(400, 150));
         jFrame.pack();

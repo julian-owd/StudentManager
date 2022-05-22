@@ -7,6 +7,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 
 public class AccountManagement {
     private JButton eMailAdresseÄndernButton;
@@ -47,6 +49,24 @@ public class AccountManagement {
             @Override
             public void actionPerformed(ActionEvent e) {
                 new ChangeMail(studentManager);
+            }
+        });
+
+        this.passwortÄndernButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new ChangePassword(studentManager);
+            }
+        });
+
+        this.abwesendCheckBox.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                if (e.getStateChange() == ItemEvent.SELECTED) {
+                    studentManager.changeUserPresenceStatus(studentManager.getCurrentUser(), true);
+                } else if (e.getStateChange() == ItemEvent.DESELECTED) {
+                    studentManager.changeUserPresenceStatus(studentManager.getCurrentUser(), false);
+                }
             }
         });
     }
