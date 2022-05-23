@@ -281,6 +281,12 @@ public class StudentManager {
         this.database.query("UPDATE user SET password='" + password + "' WHERE uID=" + user.getUID());
     }
 
+    /**
+     * Change whether a user is marked as sick or not
+     *
+     * @param user the user to change the status from
+     * @param b true if the user has to be set to sick, false if the user has to be set to not sick
+     */
     public void changeUserPresenceStatus(User user, boolean b) {
         int i;
         if (b) {
@@ -305,10 +311,11 @@ public class StudentManager {
         for (User u : user) {
             if (u instanceof Student) {
                 this.database.query("INSERT INTO `student_course` VALUES (" + u.getUID() + "," + course.getCID() + ")");
+                course.getStudents().add((Student) u);
             } else {
                 this.database.query("INSERT INTO `teacher_course` VALUES (" + u.getUID() + "," + course.getCID() + ")");
+                course.getTeachers().add((Teacher) u);
             }
-            return true;
         }
         return true;
     }

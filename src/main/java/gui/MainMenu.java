@@ -52,6 +52,14 @@ public class MainMenu {
             }
         });
 
+        this.meineKurseButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                panel1.setVisible(false);
+                new CoursesOverview(jFrame, studentManager);
+            }
+        });
+
         this.accountButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

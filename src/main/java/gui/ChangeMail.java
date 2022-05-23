@@ -49,8 +49,8 @@ public class ChangeMail {
      * Shows an error message dialog
      *
      * @param message the message in the window
-     * @param title   the title of the window
-     * @param jFrame  the frame of the gui
+     * @param title the title of the window
+     * @param jFrame the frame of the gui
      */
     public void showErrorMessageDialog(String message, String title, JFrame jFrame) {
         JOptionPane.showMessageDialog(jFrame, message, title, JOptionPane.ERROR_MESSAGE);

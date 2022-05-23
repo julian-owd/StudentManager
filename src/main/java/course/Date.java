@@ -14,10 +14,18 @@ public class Date {
     private int day;
 
     public Date(String date) {
-        String[] splittedDate = date.split("-");
-        year = Integer.parseInt(splittedDate[0]);
-        month = Integer.parseInt(splittedDate[1]);
-        day = Integer.parseInt(splittedDate[2]);
+        if (date.contains("-")) {
+            String[] splittedDate = date.split("-");
+            year = Integer.parseInt(splittedDate[0]);
+            month = Integer.parseInt(splittedDate[1]);
+            day = Integer.parseInt(splittedDate[2]);
+        } else if (date.contains(".")) {
+            String[] splittedDate = date.split("\\.");
+            year = Integer.parseInt(splittedDate[2]);
+            month = Integer.parseInt(splittedDate[1]);
+            day = Integer.parseInt(splittedDate[0]);
+        }
+
     }
 
     public String toSQLString() {
