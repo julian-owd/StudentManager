@@ -2,6 +2,7 @@ package gui;
 
 import course.Course;
 import manager.StudentManager;
+import user.Student;
 import user.Teacher;
 
 import javax.swing.*;
@@ -70,7 +71,11 @@ public class CoursesOverview {
             @Override
             public void mouseClicked(MouseEvent e) {
                 panel1.setVisible(false);
-                new StudentCourseDetail(jFrame, studentManager, studentManager.findCourse(String.valueOf(courseList.getSelectedValue()).replace("• ", "")));
+                if (studentManager.getCurrentUser() instanceof Student) {
+                    new StudentCourseDetail(jFrame, studentManager, studentManager.findCourse(String.valueOf(courseList.getSelectedValue()).replace("• ", "")));
+                } else {
+                    new TeacherCourseDetail(jFrame, studentManager, studentManager.findCourse(String.valueOf(courseList.getSelectedValue()).replace("• ", "")));
+                }
             }
 
             @Override

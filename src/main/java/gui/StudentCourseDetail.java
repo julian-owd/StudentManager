@@ -102,7 +102,7 @@ public class StudentCourseDetail {
                     }
                 }
                 if (entry == null) {
-                    JOptionPane.showMessageDialog(jFrame, "Es gab einen Fehler beim Laden der Hausaufgabe", "Fehler", JOptionPane.ERROR_MESSAGE);
+                    studentManager.showErrorMessageDialog("Es gab einen Fehler beim Laden der Hausaufgabe", jFrame);
                     return;
                 }
                 new HomeworkDetail(jFrame, studentManager, entry, course);

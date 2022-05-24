@@ -31,33 +31,22 @@ public class ChangePassword {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (currentPasswordField.getPassword().length == 0 || newPasswordField.getPassword().length == 0 || newPasswortField2.getPassword().length == 0) {
-                    showErrorMessageDialog("Bitte fülle alle Felder aus!", "Fehler", jFrame);
+                    studentManager.showErrorMessageDialog("Bitte fülle alle Felder aus!", jFrame);
                     return;
                 }
                 if (!(String.valueOf(currentPasswordField.getPassword()).equals(studentManager.getCurrentUser().getPassword()))) {
-                    showErrorMessageDialog("Dein aktuelles Passwort ist inkorrekt!", "Fehler", jFrame);
+                    studentManager.showErrorMessageDialog("Dein aktuelles Passwort ist inkorrekt!", jFrame);
                     return;
                 }
                 if (!(Arrays.equals(newPasswordField.getPassword(), newPasswortField2.getPassword()))) {
-                    showErrorMessageDialog("Dein neues Passwort muss 2x korrekt eingegeben werden!", "Fehler", jFrame);
+                    studentManager.showErrorMessageDialog("Dein neues Passwort muss 2x korrekt eingegeben werden!", jFrame);
                     return;
                 }
                 studentManager.changeUserPassword(studentManager.getCurrentUser(), String.valueOf(newPasswordField.getPassword()));
-                JOptionPane.showMessageDialog(jFrame, "Dein Passwort wurde erfolgreich geändert.", "Erfolg", JOptionPane.INFORMATION_MESSAGE);
+                studentManager.showSuccessMessageDialog("Dein Passwort wurde erfolgreich geändert.", jFrame);
                 jFrame.setVisible(false);
                 jFrame.dispose();
             }
         });
-    }
-
-    /**
-     * Shows an error message dialog
-     *
-     * @param message the message in the window
-     * @param title   the title of the window
-     * @param jFrame  the frame of the gui
-     */
-    public void showErrorMessageDialog(String message, String title, JFrame jFrame) {
-        JOptionPane.showMessageDialog(jFrame, message, title, JOptionPane.ERROR_MESSAGE);
     }
 }

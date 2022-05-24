@@ -1,14 +1,14 @@
 package manager;
 
-import course.*;
 import course.Date;
+import course.*;
 import lombok.Getter;
 import lombok.Setter;
-import user.*;
+import user.Student;
+import user.Teacher;
+import user.User;
 
-import javax.mail.*;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
+import javax.swing.*;
 import java.util.*;
 
 /**
@@ -94,7 +94,7 @@ public class StudentManager {
         }
         this.currentUser = null;
     }
-  
+
     /**
      * Get a list of the courses the current user is a member of
      *
@@ -262,7 +262,7 @@ public class StudentManager {
     /**
      * Change the email of a user
      *
-     * @param user the user to set a new email
+     * @param user  the user to set a new email
      * @param email the new email
      */
     public void changeUserEmail(User user, String email) {
@@ -273,7 +273,7 @@ public class StudentManager {
     /**
      * Change the password of a user
      *
-     * @param user the user to set a new passwort
+     * @param user     the user to set a new passwort
      * @param password the new password
      */
     public void changeUserPassword(User user, String password) {
@@ -285,7 +285,7 @@ public class StudentManager {
      * Change whether a user is marked as sick or not
      *
      * @param user the user to change the status from
-     * @param b true if the user has to be set to sick, false if the user has to be set to not sick
+     * @param b    true if the user has to be set to sick, false if the user has to be set to not sick
      */
     public void changeUserPresenceStatus(User user, boolean b) {
         int i;
@@ -319,7 +319,7 @@ public class StudentManager {
         }
         return true;
     }
-  
+
     /**
      * Removes a user from a course
      *
@@ -640,5 +640,24 @@ public class StudentManager {
         return false;*/
     }
 
+    /**
+     * Shows an error message dialog
+     *
+     * @param message the message in the window
+     * @param jFrame  the frame of the gui
+     */
+    public void showErrorMessageDialog(String message, JFrame jFrame) {
+        JOptionPane.showMessageDialog(jFrame, message, "Fehler", JOptionPane.ERROR_MESSAGE);
+    }
+
+    /**
+     * Shows a success message dialog
+     *
+     * @param message the message in the window
+     * @param jFrame  the frame of the gui
+     */
+    public void showSuccessMessageDialog(String message, JFrame jFrame) {
+        JOptionPane.showMessageDialog(jFrame, message, "Erfolg", JOptionPane.INFORMATION_MESSAGE);
+    }
 
 }

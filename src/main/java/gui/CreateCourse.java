@@ -90,11 +90,11 @@ public class CreateCourse {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (kursbezeichnungTextField.getText().isEmpty()) {
-                    showErrorMessageDialog("Bitte gib eine Kursbezeichnung ein.", "Fehler", jFrame);
+                    studentManager.showErrorMessageDialog("Bitte gib eine Kursbezeichnung ein.", jFrame);
                     return;
                 }
                 if (studentManager.findCourse(kursbezeichnungTextField.getText()) != null) {
-                    showErrorMessageDialog("Diesen Kursnamen gibt es bereits.", "Fehler", jFrame);
+                    studentManager.showErrorMessageDialog("Diesen Kursnamen gibt es bereits.", jFrame);
                     return;
                 }
 
@@ -116,7 +116,7 @@ public class CreateCourse {
                 }
 
                 if (weekdays.isEmpty()) {
-                    showErrorMessageDialog("Der Kurs muss an mindestens einem Wochentag stattfinden.", "Fehler", jFrame);
+                    studentManager.showErrorMessageDialog("Der Kurs muss an mindestens einem Wochentag stattfinden.", jFrame);
                     return;
                 }
 
@@ -124,7 +124,7 @@ public class CreateCourse {
                     if (studentManager.addUserToCourse(users, studentManager.findCourse(kursbezeichnungTextField.getText()))) {
                         panel1.setVisible(false);
                         new CoursesOverview(jFrame, studentManager);
-                        JOptionPane.showMessageDialog(jFrame, "Der Kurs " + kursbezeichnungTextField.getText() + " wurde erstellt.", "Erfolg", JOptionPane.INFORMATION_MESSAGE);
+                        studentManager.showSuccessMessageDialog("Der Kurs " + kursbezeichnungTextField.getText() + " wurde erstellt.", jFrame);
                     }
                 }
             }
@@ -163,16 +163,5 @@ public class CreateCourse {
                 jComboBox.addItem(user.getEmail());
             }
         }
-    }
-
-    /**
-     * Shows an error message dialog
-     *
-     * @param message the message in the window
-     * @param title the title of the window
-     * @param jFrame the frame of the gui
-     */
-    public void showErrorMessageDialog(String message, String title, JFrame jFrame) {
-        JOptionPane.showMessageDialog(jFrame, message, title, JOptionPane.ERROR_MESSAGE);
     }
 }
