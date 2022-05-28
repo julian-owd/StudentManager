@@ -2,6 +2,9 @@ package course;
 
 import lombok.AllArgsConstructor;
 
+import java.text.DateFormat;
+import java.util.GregorianCalendar;
+
 /**
  * @author Julian Oswald
  * @date 23.04.2022
@@ -14,10 +17,27 @@ public class Date {
     private int day;
 
     public Date(String date) {
-        String[] splittedDate = date.split("-");
-        year = Integer.parseInt(splittedDate[0]);
-        month = Integer.parseInt(splittedDate[1]);
-        day = Integer.parseInt(splittedDate[2]);
+        if (date.contains("-")) {
+            String[] splittedDate = date.split("-");
+            year = Integer.parseInt(splittedDate[0]);
+            month = Integer.parseInt(splittedDate[1]);
+            day = Integer.parseInt(splittedDate[2]);
+        } else if (date.contains(".")) {
+            String[] splittedDate = date.split("\\.");
+            year = Integer.parseInt(splittedDate[2]);
+            month = Integer.parseInt(splittedDate[1]);
+            day = Integer.parseInt(splittedDate[0]);
+        }
+
+    }
+
+    /**
+     * Generates an object of Date with the current date
+     *
+     * @return date object
+     */
+    public static Date getCurrentDate() {
+        return new Date(DateFormat.getDateInstance(DateFormat.MEDIUM).format(new GregorianCalendar().getTime()));
     }
 
     public String toSQLString() {

@@ -59,15 +59,17 @@ public class AccountManagement {
             }
         });
 
-        this.abwesendCheckBox.addItemListener(new ItemListener() {
-            @Override
-            public void itemStateChanged(ItemEvent e) {
-                if (e.getStateChange() == ItemEvent.SELECTED) {
-                    studentManager.changeUserPresenceStatus(studentManager.getCurrentUser(), true);
-                } else if (e.getStateChange() == ItemEvent.DESELECTED) {
-                    studentManager.changeUserPresenceStatus(studentManager.getCurrentUser(), false);
+        if (this.abwesendCheckBox.isVisible()) {
+            this.abwesendCheckBox.addItemListener(new ItemListener() {
+                @Override
+                public void itemStateChanged(ItemEvent e) {
+                    if (e.getStateChange() == ItemEvent.SELECTED) {
+                        studentManager.changeUserPresenceStatus(studentManager.getCurrentUser(), true);
+                    } else if (e.getStateChange() == ItemEvent.DESELECTED) {
+                        studentManager.changeUserPresenceStatus(studentManager.getCurrentUser(), false);
+                    }
                 }
-            }
-        });
+            });
+        }
     }
 }

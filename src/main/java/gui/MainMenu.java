@@ -12,11 +12,11 @@ public class MainMenu {
     private JPanel panel1;
     private JButton meineKurseButton;
     private JButton accountButton;
-    private JButton button1; // Vertretungsplan & Account hinfzufügen
-    private JButton button2; // Hausaufgaben & Account löschen
+    private JButton vertretungsplanButton;
+    private JButton hausaufgabenButton;
     private JButton logoutButton;
     private JLabel accountLabel;
-    private JButton hausaufgabeHinzufügenButton;
+    private JButton adminButton;
 
     public MainMenu(JFrame jFrame, StudentManager studentManager) {
         // configuring the jFrame
@@ -28,16 +28,13 @@ public class MainMenu {
         jFrame.getRootPane().setDefaultButton(null);
 
         this.accountLabel.setText(studentManager.getCurrentUser().getFirstName() + " " + studentManager.getCurrentUser().getLastName());
-        this.hausaufgabeHinzufügenButton.setVisible(false);
+        this.adminButton.setVisible(false);
 
         if (studentManager.getCurrentUser() instanceof Teacher t) {
-            this.hausaufgabeHinzufügenButton.setVisible(true);
+            this.vertretungsplanButton.setVisible(false);
+            this.hausaufgabenButton.setVisible(false);
             if (t.isAdmin()) {
-                button1.setText("Account hinzufügen");
-                button2.setText("Account löschen");
-            } else {
-                button1.setVisible(false);
-                button2.setVisible(false);
+                this.adminButton.setVisible(true);
             }
         }
 
@@ -52,6 +49,14 @@ public class MainMenu {
             }
         });
 
+        this.meineKurseButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                panel1.setVisible(false);
+                new CoursesOverview(jFrame, studentManager);
+            }
+        });
+
         this.accountButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -59,5 +64,35 @@ public class MainMenu {
                 new AccountManagement(jFrame, studentManager);
             }
         });
+
+        if (this.vertretungsplanButton.isVisible()) {
+            this.vertretungsplanButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    panel1.setVisible(false);
+                    new SubstitutionPlan(jFrame, studentManager);
+                }
+            });
+        }
+
+        if (this.hausaufgabenButton.isVisible()) {
+            this.hausaufgabenButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    panel1.setVisible(false);
+                    new HomeworkOverview(jFrame, studentManager);
+                }
+            });
+        }
+
+        if (this.adminButton.isVisible()) {
+            this.adminButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    panel1.setVisible(false);
+                    new AdminArea(jFrame, studentManager);
+                }
+            });
+        }
     }
 }

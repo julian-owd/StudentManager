@@ -77,7 +77,7 @@ public class SQLManager {
                         "(eID INT(8) NOT NULL AUTO_INCREMENT, " +
                         "date DATE NOT NULL, " +
                         "title VARCHAR(50) NOT NULL, " +
-                        "description VARCHAR(50) NOT NULL, " +
+                        "description VARCHAR(500) NOT NULL, " +
                         "cID INT(8)," +
                         "PRIMARY KEY(eID)," +
                         "FOREIGN KEY(cID) REFERENCES course(cID))");

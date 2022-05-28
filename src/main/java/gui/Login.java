@@ -31,7 +31,7 @@ public class Login {
             public void actionPerformed(ActionEvent e) {
                 // checking if the user filled out every field
                 if (emailField.getText().length() == 0 || passwortField.getPassword().length == 0) {
-                    showErrorMessageDialog("Bitte gib eine E-Mail-Adresse und ein Passwort ein!", "Fehler", jFrame);
+                    studentManager.showErrorMessageDialog("Bitte gib eine E-Mail-Adresse und ein Passwort ein!", jFrame);
                     return;
                 }
 
@@ -40,21 +40,10 @@ public class Login {
                     panel1.setVisible(false);
                     new MainMenu(jFrame, studentManager);
                 } else {
-                    showErrorMessageDialog("Deine Anmeldedaten stimmen mit keinem Account überein!\n" +
-                            "Wenn du dein Passwort vergessen hast, wende dich an einen Administrator.", "Fehler", jFrame);
+                    studentManager.showErrorMessageDialog("Deine Anmeldedaten stimmen mit keinem Account überein!\n" +
+                            "Wenn du du dein Passwort vergessen hast, wende dich an einen Administrator.", jFrame);
                 }
             }
         });
-    }
-
-    /**
-     * Shows an error message dialog
-     *
-     * @param message the message in the window
-     * @param title   the title of the window
-     * @param jFrame  the frame of the gui
-     */
-    public void showErrorMessageDialog(String message, String title, JFrame jFrame) {
-        JOptionPane.showMessageDialog(jFrame, message, title, JOptionPane.ERROR_MESSAGE);
     }
 }

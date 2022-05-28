@@ -44,7 +44,7 @@ public class Entry {
 
         HashMap<Integer, ArrayList<String>> studentData = studentManager.getDatabase().getData("SELECT uID FROM student_entry WHERE eID=" + eID);
         for (Integer i : studentData.keySet()) {
-            User student = studentManager.findUser(studentData.get(i).get(0));
+            User student = studentManager.findUser(Integer.parseInt(studentData.get(i).get(0)));
             if (student instanceof Student) {
                 this.participants.add((Student) student);
             }

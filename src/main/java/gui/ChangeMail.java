@@ -29,30 +29,19 @@ public class ChangeMail {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (emailField.getText().length() == 0 || passwordField.getPassword().length == 0) {
-                    showErrorMessageDialog("Bitte gib eine E-Mail & ein Passwort ein!", "Fehler", jFrame);
+                    studentManager.showErrorMessageDialog("Bitte gib eine E-Mail & ein Passwort ein!", jFrame);
                     return;
                 }
                 if (!(studentManager.getCurrentUser().getPassword().equals(String.valueOf(passwordField.getPassword())))) {
                     System.out.println(studentManager.getCurrentUser().getPassword() + "=" + String.valueOf(passwordField.getPassword()));
-                    showErrorMessageDialog("Das eingegebene Passwort ist falsch!", "Fehler", jFrame);
+                    studentManager.showErrorMessageDialog("Das eingegebene Passwort ist falsch!", jFrame);
                     return;
                 }
                 studentManager.changeUserEmail(studentManager.getCurrentUser(), emailField.getText());
-                JOptionPane.showMessageDialog(jFrame, "Deine E-Mail-Adresse wurde erfolgreich geändert.", "Erfolg", JOptionPane.INFORMATION_MESSAGE);
+                studentManager.showSuccessMessageDialog("Deine E-Mail-Adresse wurde erfolgreich geändert.", jFrame);
                 jFrame.setVisible(false);
                 jFrame.dispose();
             }
         });
-    }
-
-    /**
-     * Shows an error message dialog
-     *
-     * @param message the message in the window
-     * @param title   the title of the window
-     * @param jFrame  the frame of the gui
-     */
-    public void showErrorMessageDialog(String message, String title, JFrame jFrame) {
-        JOptionPane.showMessageDialog(jFrame, message, title, JOptionPane.ERROR_MESSAGE);
     }
 }
