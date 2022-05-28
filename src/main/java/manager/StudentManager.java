@@ -122,7 +122,7 @@ public class StudentManager {
         ArrayList<Homework> myHomework = new ArrayList<>();
 
         for (Course course : this.courses) {
-            // if the user is a student or teacher in this specific course
+            // if the user is a student in this specific course
             if (course.getStudents().contains(this.currentUser)) {
                 for (Entry entry : course.getEntries()) {
                     if (entry.getHomework() != null) {
@@ -168,7 +168,9 @@ public class StudentManager {
                             }
                         }
                         if (allSick) {
-                            substitutionPlan.add(course.getDesignation());
+                            if (!substitutionPlan.contains(course.getDesignation())) {
+                                substitutionPlan.add(course.getDesignation());
+                            }
                         }
                     }
                 }
@@ -187,10 +189,10 @@ public class StudentManager {
      * @param isTeacher whether the user is a teacher
      * @return true if the creation was successful, false if not
      */
-    public boolean createUser(String lastName, String firstName, String email, boolean isTeacher) {
+    public User createUser(String lastName, String firstName, String email, boolean isTeacher) {
         // checking if the email is already in use
         if (this.findUser(email) != null) {
-            return false;
+            return null;
         }
         String password = this.generateRandomPassword();
 
@@ -199,19 +201,27 @@ public class StudentManager {
 
         // if the HashMap is empty, we failed to add him into the database
         if (userData.isEmpty()) {
-            return false;
+            return null;
         }
         int uID = Integer.parseInt(userData.get(0).get(0));
+
+        User user;
 
         // adding him into the running system
         if (isTeacher) {
             this.database.query("INSERT INTO teacher(isSick, isAdmin, uID) VALUES (0, 0, " + uID + ")");
-            this.users.add(new Teacher(uID, this));
+            user = new Teacher(uID, this);
         } else {
-            this.users.add(new Student(uID, this));
+            user = new Student(uID, this);
         }
+        this.users.add(user);
 
-        return this.sendMail(email, "Dein Zugangspasswort", "Dein Passwort für das Schulportal lautet: " + password);
+        // sending him his password to his mail
+        if (this.sendMail(email, "Dein Zugangspasswort", "Dein Passwort für das Schulportal lautet: " + password)) {
+            return user;
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -262,7 +272,7 @@ public class StudentManager {
     /**
      * Change the email of a user
      *
-     * @param user  the user to set a new email
+     * @param user the user to set a new email
      * @param email the new email
      */
     public void changeUserEmail(User user, String email) {
@@ -273,7 +283,7 @@ public class StudentManager {
     /**
      * Change the password of a user
      *
-     * @param user     the user to set a new passwort
+     * @param user the user to set a new passwort
      * @param password the new password
      */
     public void changeUserPassword(User user, String password) {
@@ -285,7 +295,7 @@ public class StudentManager {
      * Change whether a user is marked as sick or not
      *
      * @param user the user to change the status from
-     * @param b    true if the user has to be set to sick, false if the user has to be set to not sick
+     * @param b true if the user has to be set to sick, false if the user has to be set to not sick
      */
     public void changeUserPresenceStatus(User user, boolean b) {
         int i;
@@ -344,83 +354,86 @@ public class StudentManager {
      * adds a new course
      *
      * @param designation name of the course
-     * @param weekdays    weekdays in which the course is held
-     * @return returns true if method was successful
+     * @param weekdays weekdays in which the course is held
+     * @return returns the course object, null if any errors occurred
      */
-    public boolean addCourse(String designation, ArrayList<Integer> weekdays) {
+    public Course addCourse(String designation, ArrayList<Integer> weekdays) {
         this.database.query("INSERT INTO `course` (`designation`) VALUES ('" + designation + "')");
         HashMap<Integer, ArrayList<String>> courseData = this.database.getData("SELECT cID FROM `course` where `designation`= '" + designation + "'");
         if (courseData.isEmpty()) {
-            return false;
+            return null;
         }
         for (Integer weekday : weekdays) {
             this.database.query("INSERT INTO `course_weekday` VALUES (" + Integer.parseInt(courseData.get(0).get(0)) + "," + weekday + ")");
         }
-        getCourses().add(new Course(Integer.parseInt(courseData.get(0).get(0)), this));
-        return true;
+        Course course = new Course(Integer.parseInt(courseData.get(0).get(0)), this);
+        getCourses().add(course);
+        return course;
     }
 
     /**
      * adds a new entry
      *
-     * @param course       course that is assigned to the entry
-     * @param date         date of the entry
-     * @param title        title of the entry
-     * @param description  describes the entry
+     * @param course course that is assigned to the entry
+     * @param date date of the entry
+     * @param title title of the entry
+     * @param description describes the entry
      * @param participants list of participants
-     * @return returns true if the method was successful
+     * @return returns the entry object, null if any errors occurred
      */
-    public boolean addEntry(Course course, Date date, String title, String description, ArrayList<Student> participants) {
+    public Entry addEntry(Course course, Date date, String title, String description, ArrayList<Student> participants) {
         this.database.query("INSERT INTO `entry` (`date`,`title`,`description`,`cID`) VALUES ('" + date.toSQLString() + "','" + title + "','" + description + "','" + course.getCID() + "')");
         HashMap<Integer, ArrayList<String>> entryData = this.database.getData("SELECT eID FROM `entry` where `date`= '" + date.toSQLString() + "' AND `title`= '" + title + "' AND `description`= '" + description + "' AND cID= " + course.getCID());
         if (entryData.isEmpty()) {
-            return false;
+            return null;
         }
         for (Student student : participants) {
             this.database.query("INSERT INTO `student_entry` VALUES (" + student.getUID() + "," + Integer.parseInt(entryData.get(0).get(0)) + ")");
         }
-        course.getEntries().add(new Entry(Integer.parseInt(entryData.get(0).get(0)), course, this));
-        return true;
+        Entry entry = new Entry(Integer.parseInt(entryData.get(0).get(0)), course, this);
+        course.getEntries().add(entry);
+        return entry;
     }
-
 
     /**
      * adds Homework to a specific Entry
      *
-     * @param entry       entry, in which the homework is added
+     * @param entry entry, in which the homework is added
      * @param designation describes the homework
-     * @return returns true, if adding the homework was successful
+     * @return returns the homework object, null if any errors occurred
      */
-    public boolean addHomework(Entry entry, String designation) {
+    public Homework addHomework(Entry entry, String designation) {
         if (entry.getHomework() != null) {
-            return false;
+            return null;
         }
         this.database.query("INSERT INTO `homework` (`designation`,`eID`) VALUES ('" + designation + "','" + entry.getEID() + "')");
         HashMap<Integer, ArrayList<String>> homeworkData = this.database.getData("SELECT hID FROM `homework` where `designation`='" + designation + "' AND `eID`=" + entry.getEID());
         if (homeworkData.isEmpty()) {
-            return false;
+            return null;
         }
-        entry.setHomework(new Homework(Integer.parseInt(homeworkData.get(0).get(0)), entry, this));
-        return true;
+        Homework homework = new Homework(Integer.parseInt(homeworkData.get(0).get(0)), entry, this);
+        entry.setHomework(homework);
+        return homework;
     }
 
     /**
      * adds a specific exam to a course
      *
-     * @param user        the user, who is participating in the exam
-     * @param course      course, in which the exam is held
+     * @param user the user, who is participating in the exam
+     * @param course course, in which the exam is held
      * @param designation name of the exam
-     * @param grade       grade :)
-     * @return returns true, if adding the homework was successful
+     * @param grade grade :)
+     * @return returns the exam object, null if any errors occurred
      */
-    public boolean addExam(User user, Course course, String designation, int grade) {
+    public Exam addExam(User user, Course course, String designation, int grade) {
         this.database.query("INSERT INTO `exam`(`designation`,`grade`,`cID`,`uID`) VALUES ('" + designation + "','" + grade + "','" + course.getCID() + "','" + user.getUID() + "')");
         HashMap<Integer, ArrayList<String>> examData = this.database.getData("SELECT eID FROM `exam` WHERE designation='" + designation + "' AND grade=" + grade + " AND cID=" + course.getCID() + " AND uID=" + user.getUID());
         if (examData.isEmpty()) {
-            return false;
+            return null;
         }
-        course.getExams().add(new Exam(Integer.parseInt(examData.get(0).get(0)), course, this));
-        return true;
+        Exam exam = new Exam(Integer.parseInt(examData.get(0).get(0)), course, this);
+        course.getExams().add(exam);
+        return exam;
     }
 
     /**

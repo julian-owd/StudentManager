@@ -120,12 +120,16 @@ public class CreateCourse {
                     return;
                 }
 
-                if (studentManager.addCourse(kursbezeichnungTextField.getText(), weekdays)) {
-                    if (studentManager.addUserToCourse(users, studentManager.findCourse(kursbezeichnungTextField.getText()))) {
-                        panel1.setVisible(false);
-                        new CoursesOverview(jFrame, studentManager);
-                        studentManager.showSuccessMessageDialog("Der Kurs " + kursbezeichnungTextField.getText() + " wurde erstellt.", jFrame);
+                if (studentManager.addCourse(kursbezeichnungTextField.getText(), weekdays) != null) {
+                    panel1.setVisible(false);
+                    new CoursesOverview(jFrame, studentManager);
+                    studentManager.showSuccessMessageDialog("Der Kurs " + kursbezeichnungTextField.getText() + " wurde erstellt.", jFrame);
+
+                    if (!studentManager.addUserToCourse(users, studentManager.findCourse(kursbezeichnungTextField.getText()))) {
+                        studentManager.showErrorMessageDialog("Es konnten nicht alle Schüler dem Kurs hinzugefügt werden!", jFrame);
                     }
+                } else {
+                    studentManager.showErrorMessageDialog("Der Kurs konnte nicht erstellt werden!", jFrame);
                 }
             }
         });

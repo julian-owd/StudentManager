@@ -36,16 +36,26 @@ public class HomeworkDetail {
             @Override
             public void actionPerformed(ActionEvent e) {
                 studentManager.markHomeworkAsFinished(entry.getHomework());
-                panel1.setVisible(false);
-                new StudentCourseDetail(jFrame, studentManager, course);
+                if (course != null) {
+                    panel1.setVisible(false);
+                    new StudentCourseDetail(jFrame, studentManager, course);
+                } else {
+                    panel1.setVisible(false);
+                    new HomeworkOverview(jFrame, studentManager);
+                }
             }
         });
 
         this.zurückButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                panel1.setVisible(false);
-                new StudentCourseDetail(jFrame, studentManager, course);
+                if (course != null) {
+                    panel1.setVisible(false);
+                    new StudentCourseDetail(jFrame, studentManager, course);
+                } else {
+                    panel1.setVisible(false);
+                    new HomeworkOverview(jFrame, studentManager);
+                }
             }
         });
     }

@@ -57,7 +57,11 @@ public class AddExam {
             public void actionPerformed(ActionEvent e) {
                 if (studentComboBox.getSelectedIndex() > -1) {
                     Student student = studentHashMap.get(String.valueOf(studentComboBox.getSelectedItem()));
-                    addedGrades.setText(addedGrades.getText() + "\n" + student.getFirstName() + " " + student.getLastName() + ": " + gradeSlider.getValue());
+                    if (addedGrades.getText().isEmpty()) {
+                        addedGrades.setText(student.getFirstName() + " " + student.getLastName() + ": " + gradeSlider.getValue());
+                    } else {
+                        addedGrades.setText(addedGrades.getText() + "\n" + student.getFirstName() + " " + student.getLastName() + ": " + gradeSlider.getValue());
+                    }
                     gradeMap.put(student, gradeSlider.getValue());
                     studentComboBox.removeItemAt(studentComboBox.getSelectedIndex());
                 }
@@ -76,13 +80,22 @@ public class AddExam {
                     return;
                 }
 
+                boolean error = false;
+                int errorCount = 0;
                 for (Student student : gradeMap.keySet()) {
-                    studentManager.addExam(student, course, designationField.getText(), gradeMap.get(student));
+                    if (studentManager.addExam(student, course, designationField.getText(), gradeMap.get(student)) == null) {
+                        studentManager.showErrorMessageDialog("Die Note von " + student.getFirstName() + " " + student.getLastName() + " konnte nicht gespeichert werden!" , jFrame);
+                        error = true;
+                        errorCount++;
+                    }
                 }
 
                 panel1.setVisible(false);
                 new TeacherCourseDetail(jFrame, studentManager, course);
-                studentManager.showSuccessMessageDialog("Es wurden " + gradeMap.size() + " Noten eingetragen.", jFrame);
+                if (error) {
+                    studentManager.showErrorMessageDialog("Es sind  " + errorCount + " Fehler aufgetreten!", jFrame);
+                }
+                studentManager.showSuccessMessageDialog("Es wurden " + (gradeMap.size() - errorCount) + " Noten eingetragen.", jFrame);
             }
         });
 

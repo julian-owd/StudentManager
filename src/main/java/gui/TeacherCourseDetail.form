@@ -96,14 +96,14 @@
         <properties/>
         <border type="none"/>
         <children>
-          <component id="a156c" class="javax.swing.JButton" binding="teilnehmerHinzufügenButton" default-binding="true">
+          <component id="a156c" class="javax.swing.JButton" binding="teilnehmerVerwaltenButton" default-binding="true">
             <constraints>
               <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false">
                 <preferred-size width="268" height="30"/>
               </grid>
             </constraints>
             <properties>
-              <text value="Teilnehmer hinzufügen"/>
+              <text value="Teilnehmer verwalten"/>
             </properties>
           </component>
           <component id="91018" class="javax.swing.JButton" binding="noteHinzufügenButton" default-binding="true">

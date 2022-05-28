@@ -16,7 +16,7 @@ public class TeacherCourseDetail {
     private JList nameList;
     private JList homeworkList;
     private JList examList;
-    private JButton teilnehmerHinzufügenButton;
+    private JButton teilnehmerVerwaltenButton;
     private JButton eintragHinzufügenButton;
     private JButton noteHinzufügenButton;
     private JLabel kursbezeichnungLabel;
@@ -59,7 +59,7 @@ public class TeacherCourseDetail {
                 this.examModel.addElement("Bisher keine Noten");
                 continue;
             }
-            this.examModel.addElement(String.valueOf(sumExams / numberExams));
+            this.examModel.addElement(String.valueOf(Math.round(sumExams / numberExams * 100.0) / 100.0));
         }
 
         this.zurückButton.addActionListener(new ActionListener() {
@@ -75,6 +75,14 @@ public class TeacherCourseDetail {
             public void actionPerformed(ActionEvent e) {
                 panel1.setVisible(false);
                 new AddExam(jFrame, studentManager, course);
+            }
+        });
+
+        this.eintragHinzufügenButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                panel1.setVisible(false);
+                new AddEntry(jFrame, studentManager, course);
             }
         });
     }
