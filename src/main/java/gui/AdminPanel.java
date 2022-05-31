@@ -7,14 +7,14 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class AdminArea {
+public class AdminPanel {
     private JPanel panel1;
-    private JButton nutzerLöschenButton;
-    private JButton nutzerErstellenButton;
+    private JButton nutzerEntfernenButton;
+    private JButton nutzerHinzufügenButton;
     private JButton passwortZurücksetzenButton;
     private JButton zurückButton;
 
-    public AdminArea(JFrame jFrame, StudentManager studentManager) {
+    public AdminPanel(JFrame jFrame, StudentManager studentManager) {
         // configuring the jFrame
         jFrame.setTitle("Adminpanel - Schulportal");
         jFrame.setContentPane(this.panel1);
@@ -31,10 +31,24 @@ public class AdminArea {
             }
         });
 
-        this.nutzerErstellenButton.addActionListener(new ActionListener() {
+        this.nutzerHinzufügenButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 new AddUser(studentManager);
+            }
+        });
+
+        this.nutzerEntfernenButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new RemoveUser(studentManager);
+            }
+        });
+
+        this.passwortZurücksetzenButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new ResetPassword(studentManager);
             }
         });
     }

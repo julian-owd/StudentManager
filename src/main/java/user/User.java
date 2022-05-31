@@ -35,4 +35,16 @@ public abstract class User {
             this.password = userData.get(0).get(3);
         }
     }
+
+    /**
+     * Compares the name of this user with another name. Useful to sort an ArrayList
+     *
+     * @param user the user to compare this object to
+     * @return is < 0 if the name alphabetically precedes the other user's name and > 0 if the name alphabetically follows the other user's name
+     */
+    public int compareTo(User user) {
+        String name1 = this.firstName + " " + this.lastName;
+        String name2 = user.getFirstName() + " " + user.getLastName();
+        return name1.compareTo(name2);
+    }
 }

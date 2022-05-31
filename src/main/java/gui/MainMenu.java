@@ -90,7 +90,7 @@ public class MainMenu {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     panel1.setVisible(false);
-                    new AdminArea(jFrame, studentManager);
+                    new AdminPanel(jFrame, studentManager);
                 }
             });
         }
