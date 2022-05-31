@@ -85,6 +85,14 @@ public class TeacherCourseDetail {
                 new AddEntry(jFrame, studentManager, course);
             }
         });
+
+        this.teilnehmerVerwaltenButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                panel1.setVisible(false);
+                new ManageParticipants(jFrame, studentManager, course);
+            }
+        });
     }
 
     private void createUIComponents() {
