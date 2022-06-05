@@ -5,10 +5,7 @@ import user.Teacher;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 
 public class AccountManagement {
     private JButton eMailAdresseÄndernButton;
@@ -17,6 +14,12 @@ public class AccountManagement {
     private JButton zurückButton;
     private JPanel panel1;
 
+    /**
+     * opens the AccountManagement view
+     *
+     * @param jFrame         the jFrame of all windows
+     * @param studentManager an instance of studentManager
+     */
     public AccountManagement(JFrame jFrame, StudentManager studentManager) {
         // configuring the jFrame
         jFrame.setTitle("Accountverwaltung - Schulportal");
@@ -28,6 +31,7 @@ public class AccountManagement {
 
         this.abwesendCheckBox.setVisible(false);
 
+        // only teachers may mark themselves as sick
         if (studentManager.getCurrentUser() instanceof Teacher t) {
             this.abwesendCheckBox.setVisible(true);
             if (t.isSick()) {
@@ -37,39 +41,28 @@ public class AccountManagement {
 
         this.panel1.setVisible(true);
 
-        this.zurückButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                panel1.setVisible(false);
-                new MainMenu(jFrame, studentManager);
-            }
+        // listener of back button
+        this.zurückButton.addActionListener(e -> {
+            panel1.setVisible(false);
+            new MainMenu(jFrame, studentManager);
         });
 
-        this.eMailAdresseÄndernButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                new ChangeMail(studentManager);
-            }
-        });
+        // listener of change mail button
+        this.eMailAdresseÄndernButton.addActionListener(e -> new ChangeMail(studentManager));
 
-        this.passwortÄndernButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                new ChangePassword(studentManager);
-            }
-        });
+        // listener of change password button
+        this.passwortÄndernButton.addActionListener(e -> new ChangePassword(studentManager));
 
+        // only registering the listener of the checkbox if it's visible
         if (this.abwesendCheckBox.isVisible()) {
-            this.abwesendCheckBox.addItemListener(new ItemListener() {
-                @Override
-                public void itemStateChanged(ItemEvent e) {
-                    if (e.getStateChange() == ItemEvent.SELECTED) {
-                        studentManager.changeUserPresenceStatus(studentManager.getCurrentUser(), true);
-                    } else if (e.getStateChange() == ItemEvent.DESELECTED) {
-                        studentManager.changeUserPresenceStatus(studentManager.getCurrentUser(), false);
-                    }
+            this.abwesendCheckBox.addItemListener(e -> {
+                if (e.getStateChange() == ItemEvent.SELECTED) {
+                    studentManager.changeUserPresenceStatus(studentManager.getCurrentUser(), true);
+                } else if (e.getStateChange() == ItemEvent.DESELECTED) {
+                    studentManager.changeUserPresenceStatus(studentManager.getCurrentUser(), false);
                 }
             });
         }
     }
+
 }

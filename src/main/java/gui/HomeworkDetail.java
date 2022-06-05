@@ -2,13 +2,10 @@ package gui;
 
 import course.Course;
 import course.Entry;
-import course.Homework;
 import manager.StudentManager;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class HomeworkDetail {
     private JLabel titelLabel;
@@ -17,6 +14,12 @@ public class HomeworkDetail {
     private JButton hausaufgabeAlsErledigtMarkierenButton;
     private JButton zurückButton;
 
+    /**
+     * @param jFrame         the jFrame of all windows
+     * @param studentManager an instance of studentManager
+     * @param entry          the entry the homework is attached to
+     * @param course         the course of the entry, can also be null in case the menu was opened from the HomeworkOverview
+     */
     public HomeworkDetail(JFrame jFrame, StudentManager studentManager, Entry entry, Course course) {
         // configuring jFrame
         jFrame.setTitle("Hausaufgabe vom " + entry.getDate() + " - Schulportal");
@@ -32,31 +35,28 @@ public class HomeworkDetail {
 
         this.textArea1.append(entry.getHomework().getDesignation());
 
-        this.hausaufgabeAlsErledigtMarkierenButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                studentManager.markHomeworkAsFinished(entry.getHomework());
-                if (course != null) {
-                    panel1.setVisible(false);
-                    new StudentCourseDetail(jFrame, studentManager, course);
-                } else {
-                    panel1.setVisible(false);
-                    new HomeworkOverview(jFrame, studentManager);
-                }
+        // listener of the button to mark a homework as finished
+        this.hausaufgabeAlsErledigtMarkierenButton.addActionListener(e -> {
+            studentManager.markHomeworkAsFinished(entry.getHomework());
+            if (course != null) {
+                panel1.setVisible(false);
+                new StudentCourseDetail(jFrame, studentManager, course);
+            } else {
+                panel1.setVisible(false);
+                new HomeworkOverview(jFrame, studentManager);
             }
         });
 
-        this.zurückButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (course != null) {
-                    panel1.setVisible(false);
-                    new StudentCourseDetail(jFrame, studentManager, course);
-                } else {
-                    panel1.setVisible(false);
-                    new HomeworkOverview(jFrame, studentManager);
-                }
+        // listener of the back button
+        this.zurückButton.addActionListener(e -> {
+            if (course != null) {
+                panel1.setVisible(false);
+                new StudentCourseDetail(jFrame, studentManager, course);
+            } else {
+                panel1.setVisible(false);
+                new HomeworkOverview(jFrame, studentManager);
             }
         });
     }
+
 }

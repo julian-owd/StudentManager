@@ -6,11 +6,7 @@ import manager.StudentManager;
 import user.Student;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
@@ -24,6 +20,12 @@ public class HomeworkOverview {
 
     private HashMap<Integer, Homework> homeworkHashMap = new HashMap<>();
 
+    /**
+     * Opens the HomeworkOverview
+     *
+     * @param jFrame         the jFrame of all windows
+     * @param studentManager an instance of studentManager
+     */
     public HomeworkOverview(JFrame jFrame, StudentManager studentManager) {
         // configuring the jFrame
         jFrame.setTitle("Hausaufgaben - Schulportal");
@@ -38,6 +40,7 @@ public class HomeworkOverview {
             HashMap<Course, ArrayList<Homework>> homeworkByCourse = new HashMap<>();
             ArrayList<Homework> myHomework = studentManager.getMyHomework();
 
+            // loading the list of undone homework
             for (Course course : studentManager.getMyCourses()) {
                 ArrayList<Homework> homeworkList = new ArrayList<>();
                 for (Homework h : myHomework) {
@@ -65,6 +68,7 @@ public class HomeworkOverview {
                 }
             }
 
+            // listener of the list
             this.homeworkList.addMouseListener(new MouseListener() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
@@ -96,18 +100,20 @@ public class HomeworkOverview {
                 }
             });
 
-            this.zurückButton.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    panel1.setVisible(false);
-                    new MainMenu(jFrame, studentManager);
-                }
+            // listener of the back button
+            this.zurückButton.addActionListener(e -> {
+                panel1.setVisible(false);
+                new MainMenu(jFrame, studentManager);
             });
         }
     }
 
+    /**
+     * Custom create of UI components to modify them
+     */
     private void createUIComponents() {
         this.homeworkModel = new DefaultListModel<>();
         this.homeworkList = new JList(this.homeworkModel);
     }
+
 }

@@ -8,8 +8,6 @@ import user.Student;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class TeacherCourseDetail {
     private JPanel panel1;
@@ -25,6 +23,13 @@ public class TeacherCourseDetail {
     private DefaultListModel<String> homeworkModel;
     private DefaultListModel<String> examModel;
 
+    /**
+     * Opens the CourseDetail view of a teacher
+     *
+     * @param jFrame         the jFrame of all windows
+     * @param studentManager an instance of studentManager
+     * @param course         the course to show the details from
+     */
     public TeacherCourseDetail(JFrame jFrame, StudentManager studentManager, Course course) {
         // configuring the jFrame
         jFrame.setTitle(course.getDesignation() + " - Schulportal");
@@ -36,6 +41,7 @@ public class TeacherCourseDetail {
 
         this.kursbezeichnungLabel.setText(course.getDesignation());
 
+        // loads the students of this course as well as their current average grade
         for (Student student : course.getStudents()) {
             this.teilnehmerModel.addElement("• " + student.getFirstName() + " " + student.getLastName());
             int doneHomework = student.getDoneHomework().stream().filter(c -> c.getEntry().getCourse().getCID() == course.getCID()).toList().size();
@@ -62,39 +68,34 @@ public class TeacherCourseDetail {
             this.examModel.addElement(String.valueOf(Math.round(sumExams / numberExams * 100.0) / 100.0));
         }
 
-        this.zurückButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                panel1.setVisible(false);
-                new CoursesOverview(jFrame, studentManager);
-            }
+        // listener of the back button
+        this.zurückButton.addActionListener(e -> {
+            panel1.setVisible(false);
+            new CoursesOverview(jFrame, studentManager);
         });
 
-        this.noteHinzufügenButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                panel1.setVisible(false);
-                new AddExam(jFrame, studentManager, course);
-            }
+        // listener of the add grade button
+        this.noteHinzufügenButton.addActionListener(e -> {
+            panel1.setVisible(false);
+            new AddExam(jFrame, studentManager, course);
         });
 
-        this.eintragHinzufügenButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                panel1.setVisible(false);
-                new AddEntry(jFrame, studentManager, course);
-            }
+        // listener of the add entry button
+        this.eintragHinzufügenButton.addActionListener(e -> {
+            panel1.setVisible(false);
+            new AddEntry(jFrame, studentManager, course);
         });
 
-        this.teilnehmerVerwaltenButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                panel1.setVisible(false);
-                new ManageParticipants(jFrame, studentManager, course);
-            }
+        // listener of the manage participants button
+        this.teilnehmerVerwaltenButton.addActionListener(e -> {
+            panel1.setVisible(false);
+            new ManageParticipants(jFrame, studentManager, course);
         });
     }
 
+    /**
+     * Custom create of UI components to modify them
+     */
     private void createUIComponents() {
         this.teilnehmerModel = new DefaultListModel<>();
         this.homeworkModel = new DefaultListModel<>();
@@ -103,4 +104,5 @@ public class TeacherCourseDetail {
         this.homeworkList = new JList(this.homeworkModel);
         this.examList = new JList(this.examModel);
     }
+
 }

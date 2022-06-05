@@ -5,8 +5,6 @@ import user.Teacher;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class MainMenu {
     private JPanel panel1;
@@ -18,6 +16,12 @@ public class MainMenu {
     private JLabel accountLabel;
     private JButton adminButton;
 
+    /**
+     * Opens the MainMenu view
+     *
+     * @param jFrame         the jFrame of all windows
+     * @param studentManager an instance of studentManager
+     */
     public MainMenu(JFrame jFrame, StudentManager studentManager) {
         // configuring the jFrame
         jFrame.setTitle("Übersicht - Schulportal");
@@ -30,6 +34,7 @@ public class MainMenu {
         this.accountLabel.setText(studentManager.getCurrentUser().getFirstName() + " " + studentManager.getCurrentUser().getLastName());
         this.adminButton.setVisible(false);
 
+        // modifying which buttons to show
         if (studentManager.getCurrentUser() instanceof Teacher t) {
             this.vertretungsplanButton.setVisible(false);
             this.hausaufgabenButton.setVisible(false);
@@ -40,59 +45,48 @@ public class MainMenu {
 
         this.panel1.setVisible(true);
 
-        this.logoutButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                panel1.setVisible(false);
-                studentManager.logOut();
-                new Login(jFrame, studentManager);
-            }
+        // listener of the logout button
+        this.logoutButton.addActionListener(e -> {
+            panel1.setVisible(false);
+            studentManager.logOut();
+            new Login(jFrame, studentManager);
         });
 
-        this.meineKurseButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                panel1.setVisible(false);
-                new CoursesOverview(jFrame, studentManager);
-            }
+        // listener of the courses button
+        this.meineKurseButton.addActionListener(e -> {
+            panel1.setVisible(false);
+            new CoursesOverview(jFrame, studentManager);
         });
 
-        this.accountButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                panel1.setVisible(false);
-                new AccountManagement(jFrame, studentManager);
-            }
+        // listener of the account button
+        this.accountButton.addActionListener(e -> {
+            panel1.setVisible(false);
+            new AccountManagement(jFrame, studentManager);
         });
 
+        // in case the button is visible, registering its listener
         if (this.vertretungsplanButton.isVisible()) {
-            this.vertretungsplanButton.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    panel1.setVisible(false);
-                    new SubstitutionPlan(jFrame, studentManager);
-                }
+            this.vertretungsplanButton.addActionListener(e -> {
+                panel1.setVisible(false);
+                new SubstitutionPlan(jFrame, studentManager);
             });
         }
 
+        // in case the button is visible, registering its listener
         if (this.hausaufgabenButton.isVisible()) {
-            this.hausaufgabenButton.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    panel1.setVisible(false);
-                    new HomeworkOverview(jFrame, studentManager);
-                }
+            this.hausaufgabenButton.addActionListener(e -> {
+                panel1.setVisible(false);
+                new HomeworkOverview(jFrame, studentManager);
             });
         }
 
+        // in case the button is visible, registering its listener
         if (this.adminButton.isVisible()) {
-            this.adminButton.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    panel1.setVisible(false);
-                    new AdminPanel(jFrame, studentManager);
-                }
+            this.adminButton.addActionListener(e -> {
+                panel1.setVisible(false);
+                new AdminPanel(jFrame, studentManager);
             });
         }
     }
+
 }

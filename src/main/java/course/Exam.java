@@ -2,7 +2,6 @@ package course;
 
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 import manager.StudentManager;
 import user.Student;
 
@@ -24,10 +23,18 @@ public class Exam {
     private Course course;
     private Student student;
 
+    /**
+     * creates a new exam object
+     *
+     * @param eID            the id of the exam
+     * @param course         the course of the exam
+     * @param studentManager an instance of studentManager
+     */
     public Exam(int eID, Course course, StudentManager studentManager) {
         this.eID = eID;
         this.course = course;
 
+        // loads the exam data
         HashMap<Integer, ArrayList<String>> examData = studentManager.getDatabase().getData("SELECT designation, grade, uID FROM exam WHERE eID=" + eID);
         if (!examData.isEmpty()) {
             this.designation = examData.get(0).get(0);

@@ -4,8 +4,8 @@ import manager.SQLManager;
 import manager.StudentManager;
 import user.Student;
 import user.User;
+
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 public class StudentManagerTestUI {

@@ -4,8 +4,6 @@ import manager.StudentManager;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class AdminPanel {
     private JPanel panel1;
@@ -14,6 +12,12 @@ public class AdminPanel {
     private JButton passwortZurücksetzenButton;
     private JButton zurückButton;
 
+    /**
+     * Opens the AdminPanel view
+     *
+     * @param jFrame         the jFrame of all windows
+     * @param studentManager an instance of studentManager
+     */
     public AdminPanel(JFrame jFrame, StudentManager studentManager) {
         // configuring the jFrame
         jFrame.setTitle("Adminpanel - Schulportal");
@@ -23,33 +27,20 @@ public class AdminPanel {
         jFrame.setLocationRelativeTo(null);
         jFrame.getRootPane().setDefaultButton(null);
 
-        this.zurückButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                panel1.setVisible(false);
-                new MainMenu(jFrame, studentManager);
-            }
+        // listener of the back button
+        this.zurückButton.addActionListener(e -> {
+            panel1.setVisible(false);
+            new MainMenu(jFrame, studentManager);
         });
 
-        this.nutzerHinzufügenButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                new AddUser(studentManager);
-            }
-        });
+        // listener of the add user button
+        this.nutzerHinzufügenButton.addActionListener(e -> new AddUser(studentManager));
 
-        this.nutzerEntfernenButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                new RemoveUser(studentManager);
-            }
-        });
+        // listener of the remove user button
+        this.nutzerEntfernenButton.addActionListener(e -> new RemoveUser(studentManager));
 
-        this.passwortZurücksetzenButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                new ResetPassword(studentManager);
-            }
-        });
+        // listener of the reset password button
+        this.passwortZurücksetzenButton.addActionListener(e -> new ResetPassword(studentManager));
     }
+
 }
