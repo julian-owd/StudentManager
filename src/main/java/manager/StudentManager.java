@@ -2,6 +2,7 @@ package manager;
 
 import course.Date;
 import course.*;
+import gui.Login;
 import lombok.Getter;
 import lombok.Setter;
 import user.Student;
@@ -32,6 +33,15 @@ public class StudentManager {
     public StudentManager() {
         // initializing the database
         this.database = new SQLManager("localhost", "studentmanager", "root", "", 3306);
+
+        JFrame jFrame = new JFrame();
+        new Login(jFrame, this);
+
+        if (!this.database.isConnected()) {
+            this.showErrorMessageDialog("Die Verbindung zur Datenbank konnte nicht hergestellt werden!", jFrame);
+            return;
+        }
+
         this.courses = new ArrayList<>();
         this.users = new ArrayList<>();
 
@@ -687,6 +697,10 @@ public class StudentManager {
      */
     public void showSuccessMessageDialog(String message, JFrame jFrame) {
         JOptionPane.showMessageDialog(jFrame, message, "Erfolg", JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    public static void main(String[] args) {
+        new StudentManager();
     }
 
 }

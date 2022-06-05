@@ -1,6 +1,5 @@
 package course;
 
-import manager.SQLManager;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -33,7 +32,7 @@ public class Course {
     /**
      * creates a new course object
      *
-     * @param cID the id of the Course
+     * @param cID            the id of the Course
      * @param studentManager an instance of studentManager
      */
     public Course(int cID, StudentManager studentManager) {

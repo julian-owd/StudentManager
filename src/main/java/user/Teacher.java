@@ -1,9 +1,7 @@
 package user;
 
-import course.Course;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 import manager.StudentManager;
 
 import java.util.ArrayList;
@@ -24,7 +22,7 @@ public class Teacher extends User {
     /**
      * Creates a new teacher object
      *
-     * @param uID the id of the user
+     * @param uID            the id of the user
      * @param studentManager an instance of studentManager
      */
     public Teacher(int uID, StudentManager studentManager) {

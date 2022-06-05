@@ -1,21 +1,15 @@
 package gui;
 
 import course.Course;
-import course.Date;
 import course.Entry;
 import course.Exam;
 import manager.StudentManager;
 import user.Student;
 
 import javax.swing.*;
-import javax.swing.plaf.FontUIResource;
-import javax.swing.text.StyleContext;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.util.Locale;
 
 public class StudentCourseDetail {
 

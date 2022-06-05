@@ -2,16 +2,10 @@ package gui;
 
 import course.Course;
 import course.Entry;
-import course.Homework;
 import manager.StudentManager;
 
 import javax.swing.*;
-import javax.swing.plaf.FontUIResource;
-import javax.swing.text.StyleContext;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.Locale;
 
 public class HomeworkDetail {
     private JLabel titelLabel;

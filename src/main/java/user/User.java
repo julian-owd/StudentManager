@@ -25,8 +25,7 @@ public abstract class User {
     private String password;
 
     /**
-     *
-     * @param uID the id of the user
+     * @param uID            the id of the user
      * @param studentManager an instance of studentManager
      */
     public User(int uID, StudentManager studentManager) {

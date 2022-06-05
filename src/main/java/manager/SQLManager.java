@@ -25,11 +25,11 @@ public class SQLManager {
     /**
      * Constructor with all the necessary variables
      *
-     * @param host the host of the database (most likely localhost / 127.0.0.1)
+     * @param host     the host of the database (most likely localhost / 127.0.0.1)
      * @param database the name of the database
-     * @param user the user to log in with
+     * @param user     the user to log in with
      * @param password the password of the user
-     * @param port which port to use (most likely 3306)
+     * @param port     which port to use (most likely 3306)
      */
     public SQLManager(String host, String database, String user, String password, int port) {
         this.host = host;

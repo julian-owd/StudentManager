@@ -4,14 +4,8 @@ import manager.StudentManager;
 import user.Teacher;
 
 import javax.swing.*;
-import javax.swing.plaf.FontUIResource;
-import javax.swing.text.StyleContext;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.util.Locale;
 
 public class AccountManagement {
     private JButton eMailAdresseÄndernButton;

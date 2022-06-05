@@ -1,16 +1,12 @@
 package user;
 
-import course.Course;
 import course.Homework;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 import manager.StudentManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @author Elias Paul
@@ -26,7 +22,7 @@ public class Student extends User {
     /**
      * Creates a new student object
      *
-     * @param uID the id of the user
+     * @param uID            the id of the user
      * @param studentManager an instance of studentManager
      */
     public Student(int uID, StudentManager studentManager) {

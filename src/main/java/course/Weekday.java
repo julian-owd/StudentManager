@@ -93,7 +93,7 @@ public enum Weekday {
                     return 2;
                 } else if (weekday == Weekday.WED) {
                     return 3;
-                }else if (weekday == Weekday.THR) {
+                } else if (weekday == Weekday.THR) {
                     return 4;
                 } else if (weekday == Weekday.FRI) {
                     return 0;

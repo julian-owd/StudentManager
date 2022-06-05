@@ -2,7 +2,6 @@ package course;
 
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 import manager.StudentManager;
 
 import java.util.ArrayList;
@@ -24,8 +23,8 @@ public class Homework {
     /**
      * creates a new homework object
      *
-     * @param hID the id of the homework
-     * @param entry the entry of the homework
+     * @param hID            the id of the homework
+     * @param entry          the entry of the homework
      * @param studentManager an instance of studentManager
      */
     public Homework(int hID, Entry entry, StudentManager studentManager) {

@@ -2,7 +2,6 @@ package course;
 
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 import manager.StudentManager;
 import user.Student;
 
@@ -27,8 +26,8 @@ public class Exam {
     /**
      * creates a new exam object
      *
-     * @param eID the id of the exam
-     * @param course the course of the exam
+     * @param eID            the id of the exam
+     * @param course         the course of the exam
      * @param studentManager an instance of studentManager
      */
     public Exam(int eID, Course course, StudentManager studentManager) {
