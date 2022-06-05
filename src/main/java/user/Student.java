@@ -23,6 +23,12 @@ public class Student extends User {
 
     private ArrayList<Homework> doneHomework;
 
+    /**
+     * Creates a new student object
+     *
+     * @param uID the id of the user
+     * @param studentManager an instance of studentManager
+     */
     public Student(int uID, StudentManager studentManager) {
         super(uID, studentManager);
         this.doneHomework = new ArrayList<>();

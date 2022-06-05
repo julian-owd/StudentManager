@@ -9,6 +9,8 @@ import user.User;
 import javax.swing.*;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
+import javax.swing.plaf.FontUIResource;
+import javax.swing.text.StyleContext;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -16,6 +18,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 public class ManageParticipants {
@@ -33,6 +36,13 @@ public class ManageParticipants {
     private HashMap<Integer, User> userJListHashMap;
     private DefaultListModel<String> userModel;
 
+    /**
+     * Opens the ManageParticipants view
+     *
+     * @param jFrame         the jFrame of all windows
+     * @param studentManager an instance of studentManager
+     * @param course         the course to manage the participants of
+     */
     public ManageParticipants(JFrame jFrame, StudentManager studentManager, Course course) {
         // configuring the jFrame
         jFrame.setTitle(course.getDesignation() + " - Schulportal");
@@ -49,14 +59,13 @@ public class ManageParticipants {
         this.loadComboBox(studentManager, course);
         this.loadUserList(course);
 
-        this.abbrechenButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                panel1.setVisible(false);
-                new TeacherCourseDetail(jFrame, studentManager, course);
-            }
+        // listener of the cancel button
+        this.abbrechenButton.addActionListener(e -> {
+            panel1.setVisible(false);
+            new TeacherCourseDetail(jFrame, studentManager, course);
         });
 
+        // listener of the combobox
         this.userComboBox.addPopupMenuListener(new PopupMenuListener() {
             @Override
             public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
@@ -74,18 +83,17 @@ public class ManageParticipants {
             }
         });
 
-        this.nutzerZumKursHinzufügenButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (userComboBoxHashMap.containsKey(userComboBox.getSelectedIndex())) {
-                    usersToAdd.add(userComboBoxHashMap.get(userComboBox.getSelectedIndex()));
-                    usersToRemove.remove(userComboBoxHashMap.get(userComboBox.getSelectedIndex()));
-                    loadComboBox(studentManager, course);
-                    loadUserList(course);
-                }
+        // listener of the button to add a user to the list of users which are to add
+        this.nutzerZumKursHinzufügenButton.addActionListener(e -> {
+            if (userComboBoxHashMap.containsKey(userComboBox.getSelectedIndex())) {
+                usersToAdd.add(userComboBoxHashMap.get(userComboBox.getSelectedIndex()));
+                usersToRemove.remove(userComboBoxHashMap.get(userComboBox.getSelectedIndex()));
+                loadComboBox(studentManager, course);
+                loadUserList(course);
             }
         });
 
+        // listener of the userList to remove a user from the list
         this.userList.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -122,35 +130,33 @@ public class ManageParticipants {
             }
         });
 
-        this.änderungenÜbernehmenButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                boolean successfulAdding;
-                boolean successfulRemoving = true;
-                successfulAdding = studentManager.addUserToCourse(usersToAdd, course);
+        // listener of the save changes button
+        this.änderungenÜbernehmenButton.addActionListener(e -> {
+            boolean successfulAdding;
+            boolean successfulRemoving = true;
+            successfulAdding = studentManager.addUserToCourse(usersToAdd, course);
 
-                for (User user : usersToRemove) {
-                    if (!studentManager.removeUserFromCourse(user, course)) {
-                        studentManager.showErrorMessageDialog("Der Nutzer " + user.getFirstName() + " " + user.getLastName() + " konnte nicht entfernt werden!", jFrame);
-                        successfulRemoving = false;
-                    }
+            for (User user : usersToRemove) {
+                if (!studentManager.removeUserFromCourse(user, course)) {
+                    studentManager.showErrorMessageDialog("Der Nutzer " + user.getFirstName() + " " + user.getLastName() + " konnte nicht entfernt werden!", jFrame);
+                    successfulRemoving = false;
                 }
+            }
 
-                panel1.setVisible(false);
-                new TeacherCourseDetail(jFrame, studentManager, course);
-                if (successfulAdding && successfulRemoving) {
-                    studentManager.showSuccessMessageDialog("Die Änderungen wurden übernommen.", jFrame);
-                    return;
-                }
-                if (!successfulAdding && !successfulRemoving) {
-                    studentManager.showErrorMessageDialog("Die Änderungen konnten nicht übernommen werden!", jFrame);
-                    return;
-                }
-                if (!successfulAdding) {
-                    studentManager.showSuccessMessageDialog("Es konnten eventuell nicht alle Nutzer dem Kurs hinzugefügt werden.", jFrame);
-                } else {
-                    studentManager.showSuccessMessageDialog("Es konnten eventuell nicht alle Nutzer aus dem Kurs entfernt werden.", jFrame);
-                }
+            panel1.setVisible(false);
+            new TeacherCourseDetail(jFrame, studentManager, course);
+            if (successfulAdding && successfulRemoving) {
+                studentManager.showSuccessMessageDialog("Die Änderungen wurden übernommen.", jFrame);
+                return;
+            }
+            if (!successfulAdding && !successfulRemoving) {
+                studentManager.showErrorMessageDialog("Die Änderungen konnten nicht übernommen werden!", jFrame);
+                return;
+            }
+            if (!successfulAdding) {
+                studentManager.showSuccessMessageDialog("Es konnten eventuell nicht alle Nutzer dem Kurs hinzugefügt werden.", jFrame);
+            } else {
+                studentManager.showSuccessMessageDialog("Es konnten eventuell nicht alle Nutzer aus dem Kurs entfernt werden.", jFrame);
             }
         });
     }
@@ -224,8 +230,12 @@ public class ManageParticipants {
         }
     }
 
+    /**
+     * Custom create of UI components to modify them
+     */
     private void createUIComponents() {
         this.userModel = new DefaultListModel<>();
         this.userList = new JList(this.userModel);
     }
+
 }

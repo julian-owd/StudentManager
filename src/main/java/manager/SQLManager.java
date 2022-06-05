@@ -25,11 +25,11 @@ public class SQLManager {
     /**
      * Constructor with all the necessary variables
      *
-     * @param host
-     * @param database
-     * @param user
-     * @param password
-     * @param port
+     * @param host the host of the database (most likely localhost / 127.0.0.1)
+     * @param database the name of the database
+     * @param user the user to log in with
+     * @param password the password of the user
+     * @param port which port to use (most likely 3306)
      */
     public SQLManager(String host, String database, String user, String password, int port) {
         this.host = host;
@@ -54,8 +54,8 @@ public class SQLManager {
                         "(uID INT(8) NOT NULL AUTO_INCREMENT, " +
                         "lastName VARCHAR(50) NOT NULL, " +
                         "firstName VARCHAR(50) NOT NULL, " +
-                        "email VARCHAR(50) NOT NULL, " +
-                        "password VARCHAR(50) NOT NULL, " +
+                        "email VARCHAR(100) NOT NULL, " +
+                        "password VARCHAR(256) NOT NULL, " +
                         "PRIMARY KEY(uID))");
 
                 // create table teacher
@@ -76,8 +76,8 @@ public class SQLManager {
                 statement.executeUpdate("CREATE TABLE IF NOT EXISTS entry " +
                         "(eID INT(8) NOT NULL AUTO_INCREMENT, " +
                         "date DATE NOT NULL, " +
-                        "title VARCHAR(50) NOT NULL, " +
-                        "description VARCHAR(500) NOT NULL, " +
+                        "title VARCHAR(100) NOT NULL, " +
+                        "description VARCHAR(5000) NOT NULL, " +
                         "cID INT(8)," +
                         "PRIMARY KEY(eID)," +
                         "FOREIGN KEY(cID) REFERENCES course(cID))");
@@ -85,8 +85,8 @@ public class SQLManager {
                 // create table exam
                 statement.executeUpdate("CREATE TABLE IF NOT EXISTS exam " +
                         "(eID INT(8) NOT NULL AUTO_INCREMENT, " +
-                        "designation VARCHAR(50) NOT NULL, " +
-                        "grade INT(8) NOT NULL, " +
+                        "designation VARCHAR(200) NOT NULL, " +
+                        "grade INT(2) NOT NULL, " +
                         "cID INT(8)," +
                         "uID INT(8)," +
                         "PRIMARY KEY(eID)," +
@@ -96,7 +96,7 @@ public class SQLManager {
                 // create table homework
                 statement.executeUpdate("CREATE TABLE IF NOT EXISTS homework " +
                         "(hID INT(8) NOT NULL AUTO_INCREMENT, " +
-                        "designation VARCHAR(50) NOT NULL, " +
+                        "designation VARCHAR(500) NOT NULL, " +
                         "eID INT(8)," +
                         "PRIMARY KEY(hID)," +
                         "FOREIGN KEY(eID) REFERENCES entry(eID))");

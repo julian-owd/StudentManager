@@ -7,10 +7,13 @@ import user.Student;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.plaf.FontUIResource;
+import javax.swing.text.StyleContext;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
+import java.util.Locale;
 
 public class AddExam {
     private JComboBox studentComboBox;
@@ -26,6 +29,13 @@ public class AddExam {
     private HashMap<String, Student> studentHashMap;
     private HashMap<Student, Integer> gradeMap;
 
+    /**
+     * Opens the AddExam view
+     *
+     * @param jFrame         the jFrame of all windows
+     * @param studentManager an instance of studentManager
+     * @param course         the course to add an exam to
+     */
     public AddExam(JFrame jFrame, StudentManager studentManager, Course course) {
         // configuring the jFrame
         jFrame.setTitle(course.getDesignation() + " - Schulportal");
@@ -40,71 +50,67 @@ public class AddExam {
 
         this.gradeLabel.setText(String.valueOf(this.gradeSlider.getValue()));
 
+        // filling the combobox with the students of this course
         for (int i = 0; i < course.getStudents().size(); i++) {
             this.studentHashMap.put(course.getStudents().get(i).getFirstName() + " " + course.getStudents().get(i).getLastName(), course.getStudents().get(i));
             this.studentComboBox.addItem(course.getStudents().get(i).getFirstName() + " " + course.getStudents().get(i).getLastName());
         }
 
-        this.gradeSlider.addChangeListener(new ChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent e) {
-                gradeLabel.setText(String.valueOf(gradeSlider.getValue()));
+        // listener of the slider
+        this.gradeSlider.addChangeListener(e -> gradeLabel.setText(String.valueOf(gradeSlider.getValue())));
+
+        // listener of the add button for a single grade
+        this.hinzufügenButton.addActionListener(e -> {
+            if (studentComboBox.getSelectedIndex() > -1) {
+                Student student = studentHashMap.get(String.valueOf(studentComboBox.getSelectedItem()));
+                if (addedGrades.getText().isEmpty()) {
+                    addedGrades.setText(student.getFirstName() + " " + student.getLastName() + ": " + gradeSlider.getValue());
+                } else {
+                    addedGrades.setText(addedGrades.getText() + "\n" + student.getFirstName() + " " + student.getLastName() + ": " + gradeSlider.getValue());
+                }
+                gradeMap.put(student, gradeSlider.getValue());
+                studentComboBox.removeItemAt(studentComboBox.getSelectedIndex());
             }
         });
 
-        this.hinzufügenButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (studentComboBox.getSelectedIndex() > -1) {
-                    Student student = studentHashMap.get(String.valueOf(studentComboBox.getSelectedItem()));
-                    if (addedGrades.getText().isEmpty()) {
-                        addedGrades.setText(student.getFirstName() + " " + student.getLastName() + ": " + gradeSlider.getValue());
-                    } else {
-                        addedGrades.setText(addedGrades.getText() + "\n" + student.getFirstName() + " " + student.getLastName() + ": " + gradeSlider.getValue());
-                    }
-                    gradeMap.put(student, gradeSlider.getValue());
-                    studentComboBox.removeItemAt(studentComboBox.getSelectedIndex());
+        // listener of the save button of all grades
+        this.notenSpeichernButton.addActionListener(e -> {
+            if (designationField.getText().isEmpty()) {
+                studentManager.showErrorMessageDialog("Bitte gib eine Bezeichnung für die Noten ein!", jFrame);
+                return;
+            }
+            if (designationField.getText().length() > 200) {
+                studentManager.showErrorMessageDialog("Die Bezeichnung darf nicht länger als 200 Zeichen sein!", jFrame);
+                return;
+            }
+            if (gradeMap.isEmpty()) {
+                studentManager.showErrorMessageDialog("Bitte trage mindestens eine Note ein!", jFrame);
+                return;
+            }
+
+            boolean error = false;
+            int errorCount = 0;
+            for (Student student : gradeMap.keySet()) {
+                if (studentManager.addExam(student, course, designationField.getText(), gradeMap.get(student)) == null) {
+                    studentManager.showErrorMessageDialog("Die Note von " + student.getFirstName() + " " + student.getLastName() + " konnte nicht gespeichert werden!", jFrame);
+                    error = true;
+                    errorCount++;
                 }
             }
+
+            panel1.setVisible(false);
+            new TeacherCourseDetail(jFrame, studentManager, course);
+            if (error) {
+                studentManager.showErrorMessageDialog("Es sind  " + errorCount + " Fehler aufgetreten!", jFrame);
+            }
+            studentManager.showSuccessMessageDialog("Es wurden " + (gradeMap.size() - errorCount) + " Noten eingetragen.", jFrame);
         });
 
-        this.notenSpeichernButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (designationField.getText().isEmpty()) {
-                    studentManager.showErrorMessageDialog("Bitte gib eine Bezeichnung für die Noten ein!", jFrame);
-                    return;
-                }
-                if (gradeMap.isEmpty()) {
-                    studentManager.showErrorMessageDialog("Bitte trage mindestens eine Note ein!", jFrame);
-                    return;
-                }
-
-                boolean error = false;
-                int errorCount = 0;
-                for (Student student : gradeMap.keySet()) {
-                    if (studentManager.addExam(student, course, designationField.getText(), gradeMap.get(student)) == null) {
-                        studentManager.showErrorMessageDialog("Die Note von " + student.getFirstName() + " " + student.getLastName() + " konnte nicht gespeichert werden!" , jFrame);
-                        error = true;
-                        errorCount++;
-                    }
-                }
-
-                panel1.setVisible(false);
-                new TeacherCourseDetail(jFrame, studentManager, course);
-                if (error) {
-                    studentManager.showErrorMessageDialog("Es sind  " + errorCount + " Fehler aufgetreten!", jFrame);
-                }
-                studentManager.showSuccessMessageDialog("Es wurden " + (gradeMap.size() - errorCount) + " Noten eingetragen.", jFrame);
-            }
-        });
-
-        this.zurückButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                panel1.setVisible(false);
-                new TeacherCourseDetail(jFrame, studentManager, course);
-            }
+        // listener of the back button
+        this.zurückButton.addActionListener(e -> {
+            panel1.setVisible(false);
+            new TeacherCourseDetail(jFrame, studentManager, course);
         });
     }
+
 }

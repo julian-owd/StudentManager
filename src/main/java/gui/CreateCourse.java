@@ -8,10 +8,13 @@ import user.User;
 import javax.swing.*;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
+import javax.swing.plaf.FontUIResource;
+import javax.swing.text.StyleContext;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class CreateCourse {
     private JTextField kursbezeichnungTextField;
@@ -31,6 +34,12 @@ public class CreateCourse {
 
     private ArrayList<User> users;
 
+    /**
+     * Opens the CreateCourse view
+     *
+     * @param jFrame         the jFrame of all windows
+     * @param studentManager an instance of studentManager
+     */
     public CreateCourse(JFrame jFrame, StudentManager studentManager) {
         // configuring the jFrame
         jFrame.setTitle("Kurs hinzufügen - Schulportal");
@@ -49,6 +58,7 @@ public class CreateCourse {
         loadComboBox(this.userComboBox, studentManager);
         this.userComboBox.setSelectedIndex(0);
 
+        // listener of the combobox
         this.userComboBox.addPopupMenuListener(new PopupMenuListener() {
             @Override
             public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
@@ -64,73 +74,71 @@ public class CreateCourse {
             }
         });
 
-        this.addUserButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (userComboBox.getSelectedItem() == null) {
-                    return;
-                }
-                User user = studentManager.findUser(String.valueOf(userComboBox.getSelectedItem()));
-                users.add(user);
-                userTextArea.setText(userTextArea.getText() + user.getEmail() + "\n");
-                loadComboBox(userComboBox, studentManager);
-                aktuelleTeilnehmerLabel.setText("Aktuelle Teilnehmer (" + users.size() + ")");
+        // listener of the button to add an user to this new course
+        this.addUserButton.addActionListener(e -> {
+            if (userComboBox.getSelectedItem() == null) {
+                return;
             }
+            User user = studentManager.findUser(String.valueOf(userComboBox.getSelectedItem()));
+            users.add(user);
+            userTextArea.setText(userTextArea.getText() + user.getEmail() + "\n");
+            loadComboBox(userComboBox, studentManager);
+            aktuelleTeilnehmerLabel.setText("Aktuelle Teilnehmer (" + users.size() + ")");
         });
 
-        this.abbrechenButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
+        // listener of the cancel button
+        this.abbrechenButton.addActionListener(e -> {
+            panel1.setVisible(false);
+            new CoursesOverview(jFrame, studentManager);
+        });
+
+        // listener of the create button
+        this.kursHinzufügenButton.addActionListener(e -> {
+            if (kursbezeichnungTextField.getText().isEmpty()) {
+                studentManager.showErrorMessageDialog("Bitte gib eine Kursbezeichnung ein.", jFrame);
+                return;
+            }
+            if (kursbezeichnungTextField.getText().length() > 50) {
+                studentManager.showErrorMessageDialog("Die Kursbezeichnung darf nicht länger als 50 Zeichen sein!", jFrame);
+                return;
+            }
+            if (studentManager.findCourse(kursbezeichnungTextField.getText()) != null) {
+                studentManager.showErrorMessageDialog("Diesen Kursnamen gibt es bereits.", jFrame);
+                return;
+            }
+
+            ArrayList<Integer> weekdays = new ArrayList<>();
+            if (montagCheckBox.isSelected()) {
+                weekdays.add(1);
+            }
+            if (dienstagCheckBox.isSelected()) {
+                weekdays.add(2);
+            }
+            if (mittwochCheckBox.isSelected()) {
+                weekdays.add(3);
+            }
+            if (donnerstagCheckBox.isSelected()) {
+                weekdays.add(4);
+            }
+            if (freitagCheckBox.isSelected()) {
+                weekdays.add(5);
+            }
+
+            if (weekdays.isEmpty()) {
+                studentManager.showErrorMessageDialog("Der Kurs muss an mindestens einem Wochentag stattfinden.", jFrame);
+                return;
+            }
+
+            if (studentManager.addCourse(kursbezeichnungTextField.getText(), weekdays) != null) {
                 panel1.setVisible(false);
                 new CoursesOverview(jFrame, studentManager);
-            }
-        });
+                studentManager.showSuccessMessageDialog("Der Kurs " + kursbezeichnungTextField.getText() + " wurde erstellt.", jFrame);
 
-        this.kursHinzufügenButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (kursbezeichnungTextField.getText().isEmpty()) {
-                    studentManager.showErrorMessageDialog("Bitte gib eine Kursbezeichnung ein.", jFrame);
-                    return;
+                if (!studentManager.addUserToCourse(users, studentManager.findCourse(kursbezeichnungTextField.getText()))) {
+                    studentManager.showErrorMessageDialog("Es konnten nicht alle Schüler dem Kurs hinzugefügt werden!", jFrame);
                 }
-                if (studentManager.findCourse(kursbezeichnungTextField.getText()) != null) {
-                    studentManager.showErrorMessageDialog("Diesen Kursnamen gibt es bereits.", jFrame);
-                    return;
-                }
-
-                ArrayList<Integer> weekdays = new ArrayList<>();
-                if (montagCheckBox.isSelected()) {
-                    weekdays.add(1);
-                }
-                if (dienstagCheckBox.isSelected()) {
-                    weekdays.add(2);
-                }
-                if (mittwochCheckBox.isSelected()) {
-                    weekdays.add(3);
-                }
-                if (donnerstagCheckBox.isSelected()) {
-                    weekdays.add(4);
-                }
-                if (freitagCheckBox.isSelected()) {
-                    weekdays.add(5);
-                }
-
-                if (weekdays.isEmpty()) {
-                    studentManager.showErrorMessageDialog("Der Kurs muss an mindestens einem Wochentag stattfinden.", jFrame);
-                    return;
-                }
-
-                if (studentManager.addCourse(kursbezeichnungTextField.getText(), weekdays) != null) {
-                    panel1.setVisible(false);
-                    new CoursesOverview(jFrame, studentManager);
-                    studentManager.showSuccessMessageDialog("Der Kurs " + kursbezeichnungTextField.getText() + " wurde erstellt.", jFrame);
-
-                    if (!studentManager.addUserToCourse(users, studentManager.findCourse(kursbezeichnungTextField.getText()))) {
-                        studentManager.showErrorMessageDialog("Es konnten nicht alle Schüler dem Kurs hinzugefügt werden!", jFrame);
-                    }
-                } else {
-                    studentManager.showErrorMessageDialog("Der Kurs konnte nicht erstellt werden!", jFrame);
-                }
+            } else {
+                studentManager.showErrorMessageDialog("Der Kurs konnte nicht erstellt werden!", jFrame);
             }
         });
     }
@@ -138,7 +146,7 @@ public class CreateCourse {
     /**
      * Reloads / Loads the combo box (suggestions for a user) is located
      *
-     * @param jComboBox The box into which the elements are to be loaded
+     * @param jComboBox      The box into which the elements are to be loaded
      * @param studentManager instance of studentManager to access the methods
      */
     private void loadComboBox(JComboBox jComboBox, StudentManager studentManager) {
@@ -157,7 +165,7 @@ public class CreateCourse {
     /**
      * Reloads / Loads the combo box (suggestions for a user) is located, but only the elements which aren't yet selected are going to be displayed
      *
-     * @param jComboBox The box into which the elements are to be loaded
+     * @param jComboBox      The box into which the elements are to be loaded
      * @param studentManager instance of studentManager to access the methods
      */
     private void loadComboBoxFiltered(JComboBox jComboBox, StudentManager studentManager) {
@@ -168,4 +176,5 @@ public class CreateCourse {
             }
         }
     }
+
 }

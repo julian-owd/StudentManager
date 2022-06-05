@@ -16,13 +16,18 @@ public class Date {
     private int month;
     private int day;
 
+    /**
+     * creates a new date object
+     *
+     * @param date the string to convert into a Date object
+     */
     public Date(String date) {
-        if (date.contains("-")) {
+        if (date.contains("-")) { // sql syntax
             String[] splittedDate = date.split("-");
             year = Integer.parseInt(splittedDate[0]);
             month = Integer.parseInt(splittedDate[1]);
             day = Integer.parseInt(splittedDate[2]);
-        } else if (date.contains(".")) {
+        } else if (date.contains(".")) { // german syntax
             String[] splittedDate = date.split("\\.");
             year = Integer.parseInt(splittedDate[2]);
             month = Integer.parseInt(splittedDate[1]);
@@ -40,6 +45,11 @@ public class Date {
         return new Date(DateFormat.getDateInstance(DateFormat.MEDIUM).format(new GregorianCalendar().getTime()));
     }
 
+    /**
+     * Converts the date into a sql suitable string
+     *
+     * @return the date in its new format
+     */
     public String toSQLString() {
         StringBuilder builder = new StringBuilder();
 
@@ -57,6 +67,11 @@ public class Date {
         return builder.toString();
     }
 
+    /**
+     * Converts the date into a string with german syntax
+     *
+     * @return the date in its new format
+     */
     public String toString() {
         StringBuilder builder = new StringBuilder();
 

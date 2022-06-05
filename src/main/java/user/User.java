@@ -24,9 +24,15 @@ public abstract class User {
     private String email;
     private String password;
 
+    /**
+     *
+     * @param uID the id of the user
+     * @param studentManager an instance of studentManager
+     */
     public User(int uID, StudentManager studentManager) {
         this.uID = uID;
 
+        // loads the data of the user
         HashMap<Integer, ArrayList<String>> userData = studentManager.getDatabase().getData("SELECT lastName, firstName, email, password FROM user WHERE uID=" + uID);
         if (!userData.isEmpty()) {
             this.lastName = userData.get(0).get(0);

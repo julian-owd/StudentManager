@@ -21,10 +21,18 @@ public class Homework {
     private String designation;
     private Entry entry;
 
+    /**
+     * creates a new homework object
+     *
+     * @param hID the id of the homework
+     * @param entry the entry of the homework
+     * @param studentManager an instance of studentManager
+     */
     public Homework(int hID, Entry entry, StudentManager studentManager) {
         this.hID = hID;
         this.entry = entry;
 
+        // loads the data of this specific homework
         HashMap<Integer, ArrayList<String>> homeworkData = studentManager.getDatabase().getData("SELECT designation FROM homework WHERE hID=" + hID);
         if (!homeworkData.isEmpty()) {
             this.designation = homeworkData.get(0).get(0);

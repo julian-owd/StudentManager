@@ -8,11 +8,14 @@ import manager.StudentManager;
 import user.Student;
 
 import javax.swing.*;
+import javax.swing.plaf.FontUIResource;
+import javax.swing.text.StyleContext;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.Locale;
 
 public class StudentCourseDetail {
 
@@ -29,6 +32,13 @@ public class StudentCourseDetail {
     private DefaultListModel<String> presenceModel;
     private DefaultListModel<String> gradeModel;
 
+    /**
+     * Opens the CourseDetail view of a student
+     *
+     * @param jFrame         the jFrame of all windows
+     * @param studentManager an instance of studentManager
+     * @param course         the course to show the details from
+     */
     public StudentCourseDetail(JFrame jFrame, StudentManager studentManager, Course course) {
         // configuring the jFrame
         jFrame.setTitle(course.getDesignation() + " - Schulportal");
@@ -40,6 +50,7 @@ public class StudentCourseDetail {
 
         this.kursbezeichnungLabel.setText(course.getDesignation());
 
+        // loads the teachers
         StringBuilder teachers = new StringBuilder();
         for (int i = 0; i < course.getTeachers().size(); i++) {
             if (i == course.getTeachers().size() - 1) {
@@ -50,6 +61,7 @@ public class StudentCourseDetail {
         }
         this.lehrkraftLabel.setText(this.lehrkraftLabel.getText() + teachers);
 
+        // loads the existing entries
         for (Entry entry : course.getEntries()) {
             Student student = (Student) studentManager.getCurrentUser();
             if (entry.getHomework() != null) {
@@ -71,20 +83,20 @@ public class StudentCourseDetail {
             }
         }
 
+        // loads the existing exams
         for (Exam exam : course.getExams()) {
             if (exam.getStudent().equals(studentManager.getCurrentUser())) {
                 this.gradeModel.addElement("• " + exam.getDesignation() + ": " + exam.getGrade() + " NP");
             }
         }
 
-        this.zurückButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                panel1.setVisible(false);
-                new CoursesOverview(jFrame, studentManager);
-            }
+        // listener of the back button
+        this.zurückButton.addActionListener(e -> {
+            panel1.setVisible(false);
+            new CoursesOverview(jFrame, studentManager);
         });
 
+        // listener of the date list to show a specific homework
         this.dateList.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -131,6 +143,9 @@ public class StudentCourseDetail {
         });
     }
 
+    /**
+     * Custom create of UI components to modify them
+     */
     private void createUIComponents() {
         this.dateModel = new DefaultListModel<>();
         this.topicModel = new DefaultListModel<>();
@@ -141,4 +156,5 @@ public class StudentCourseDetail {
         this.presenceStatusList = new JList<>(this.presenceModel);
         this.gradeList = new JList<>(this.gradeModel);
     }
+
 }

@@ -6,11 +6,14 @@ import user.User;
 import javax.swing.*;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
+import javax.swing.plaf.FontUIResource;
+import javax.swing.text.StyleContext;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Locale;
 
 public class RemoveUser {
     private JTextField userTextField;
@@ -21,6 +24,11 @@ public class RemoveUser {
 
     private HashMap<Integer, User> userHashMap;
 
+    /**
+     * Opens the RemoveUser view
+     *
+     * @param studentManager an instance of studentManager
+     */
     public RemoveUser(StudentManager studentManager) {
         // configuring jFrame
         JFrame jFrame = new JFrame();
@@ -36,14 +44,13 @@ public class RemoveUser {
         this.userHashMap = new HashMap<>();
         this.loadComboBox(studentManager);
 
-        this.abbrechenButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                jFrame.setVisible(false);
-                jFrame.dispose();
-            }
+        // listener of the cancel button
+        this.abbrechenButton.addActionListener(e -> {
+            jFrame.setVisible(false);
+            jFrame.dispose();
         });
 
+        // listener of the combobox
         this.userComboBox.addPopupMenuListener(new PopupMenuListener() {
             @Override
             public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
@@ -61,18 +68,16 @@ public class RemoveUser {
             }
         });
 
-        this.entfernenButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (userHashMap.containsKey(userComboBox.getSelectedIndex())) {
-                    if (studentManager.deleteUser(userHashMap.get(userComboBox.getSelectedIndex()))) {
-                        studentManager.showSuccessMessageDialog("Der Nutzer wurde entfernt.", jFrame);
-                    } else {
-                        studentManager.showErrorMessageDialog("Der Nutzer konnte nicht entfernt werden!", jFrame);
-                    }
-                    jFrame.setVisible(false);
-                    jFrame.dispose();
+        // listener of the remove / confirm button
+        this.entfernenButton.addActionListener(e -> {
+            if (userHashMap.containsKey(userComboBox.getSelectedIndex())) {
+                if (studentManager.deleteUser(userHashMap.get(userComboBox.getSelectedIndex()))) {
+                    studentManager.showSuccessMessageDialog("Der Nutzer wurde entfernt.", jFrame);
+                } else {
+                    studentManager.showErrorMessageDialog("Der Nutzer konnte nicht entfernt werden!", jFrame);
                 }
+                jFrame.setVisible(false);
+                jFrame.dispose();
             }
         });
 
@@ -109,4 +114,5 @@ public class RemoveUser {
             this.userComboBox.setSelectedIndex(0);
         }
     }
+
 }

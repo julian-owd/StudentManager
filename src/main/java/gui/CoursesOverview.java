@@ -6,11 +6,14 @@ import user.Student;
 import user.Teacher;
 
 import javax.swing.*;
+import javax.swing.plaf.FontUIResource;
+import javax.swing.text.StyleContext;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.Locale;
 
 public class CoursesOverview {
     private JList courseList;
@@ -21,6 +24,12 @@ public class CoursesOverview {
     private DefaultListModel<String> courseModel;
     private DefaultListModel<String> teacherModel;
 
+    /**
+     * Opens the CoursesOverview
+     *
+     * @param jFrame         the jFrame of all windows
+     * @param studentManager an instance of studentManager
+     */
     public CoursesOverview(JFrame jFrame, StudentManager studentManager) {
         // configuring the jFrame
         jFrame.setTitle("Meine Kurse - Schulportal");
@@ -30,6 +39,7 @@ public class CoursesOverview {
         jFrame.setLocationRelativeTo(null);
         jFrame.getRootPane().setDefaultButton(null);
 
+        // only showing this buttons in case the current user is a teacher
         this.kursHinzufügenButton.setVisible(false);
         if (studentManager.getCurrentUser() instanceof Teacher) {
             this.kursHinzufügenButton.setVisible(true);
@@ -49,24 +59,21 @@ public class CoursesOverview {
             }
         }
 
-        this.zurückButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                panel1.setVisible(false);
-                new MainMenu(jFrame, studentManager);
-            }
+        // listener of the back button
+        this.zurückButton.addActionListener(e -> {
+            panel1.setVisible(false);
+            new MainMenu(jFrame, studentManager);
         });
 
+        // only registering the listener of the add course button in case it's visible
         if (this.kursHinzufügenButton.isVisible()) {
-            this.kursHinzufügenButton.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    panel1.setVisible(false);
-                    new CreateCourse(jFrame, studentManager);
-                }
+            this.kursHinzufügenButton.addActionListener(e -> {
+                panel1.setVisible(false);
+                new CreateCourse(jFrame, studentManager);
             });
         }
 
+        // listener of the list of course designations
         this.courseList.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -101,10 +108,14 @@ public class CoursesOverview {
 
     }
 
+    /**
+     * Custom create of UI components to modify them
+     */
     private void createUIComponents() {
         this.courseModel = new DefaultListModel<>();
         this.teacherModel = new DefaultListModel<>();
         this.courseList = new JList(this.courseModel);
         this.teacherList = new JList<>(this.teacherModel);
     }
+
 }

@@ -27,9 +27,10 @@ public class StudentManager {
     private User currentUser;
 
     /**
-     * Constructor which also connects it with the database
+     * Constructor which also connects the problem to the database
      */
     public StudentManager() {
+        // initializing the database
         this.database = new SQLManager("localhost", "studentmanager", "root", "", 3306);
         this.courses = new ArrayList<>();
         this.users = new ArrayList<>();
@@ -236,17 +237,32 @@ public class StudentManager {
             return false;
         }
 
+        this.users.remove(user);
+
         // evaluating whether the user is a teacher or a student
         if (user instanceof Teacher) {
             this.database.query("DELETE FROM teacher_course WHERE uID=" + user.getUID());
             this.database.query("DELETE FROM teacher WHERE uID=" + user.getUID());
             this.database.query("DELETE FROM user WHERE uID=" + user.getUID());
+
+            for (Course course : this.courses)  {
+                course.getTeachers().remove(user);
+            }
             return true;
         } else if (user instanceof Student) {
             this.database.query("DELETE FROM student_course WHERE uID=" + user.getUID());
             this.database.query("DELETE FROM student_entry WHERE uID=" + user.getUID());
             this.database.query("DELETE FROM student_homework WHERE uID=" + user.getUID());
+            this.database.query("DELETE FROM exam WHERE uID=" + user.getUID());
             this.database.query("DELETE FROM user WHERE uID=" + user.getUID());
+
+            for (Course course : this.courses)  {
+                if (course.getStudents().remove(user)) {
+                    for (Entry entry : course.getEntries()) {
+                        entry.getParticipants().remove(user);
+                    }
+                }
+            }
             return true;
         } else {
             return false;

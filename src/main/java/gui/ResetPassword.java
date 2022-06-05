@@ -6,11 +6,14 @@ import user.User;
 import javax.swing.*;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
+import javax.swing.plaf.FontUIResource;
+import javax.swing.text.StyleContext;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Locale;
 
 public class ResetPassword {
     private JPanel panel1;
@@ -21,6 +24,11 @@ public class ResetPassword {
 
     private HashMap<Integer, User> userHashMap;
 
+    /**
+     * Opens the ResetPassword view
+     *
+     * @param studentManager an instance of studentManager
+     */
     public ResetPassword(StudentManager studentManager) {
         // configuring jFrame
         JFrame jFrame = new JFrame();
@@ -36,14 +44,13 @@ public class ResetPassword {
         this.userHashMap = new HashMap<>();
         this.loadComboBox(studentManager);
 
-        this.abbrechenButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                jFrame.setVisible(false);
-                jFrame.dispose();
-            }
+        // listener of the cancel button
+        this.abbrechenButton.addActionListener(e -> {
+            jFrame.setVisible(false);
+            jFrame.dispose();
         });
 
+        // listener of the combobox
         this.userComboBox.addPopupMenuListener(new PopupMenuListener() {
             @Override
             public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
@@ -61,18 +68,16 @@ public class ResetPassword {
             }
         });
 
-        this.zurücksetzenButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (userHashMap.containsKey(userComboBox.getSelectedIndex())) {
-                    if (studentManager.resetUserPassword(userHashMap.get(userComboBox.getSelectedIndex()))) {
-                        studentManager.showSuccessMessageDialog("Das Passwort des Nutzers wurde zurückgesetzt. Er erhält sein neues Passwort an seine E-Mail-Adresse.", jFrame);
-                    } else {
-                        studentManager.showErrorMessageDialog("Das Passwort konnte nicht zurückgesetzt werden!", jFrame);
-                    }
-                    jFrame.setVisible(false);
-                    jFrame.dispose();
+        // listener of the reset / confirm button
+        this.zurücksetzenButton.addActionListener(e -> {
+            if (userHashMap.containsKey(userComboBox.getSelectedIndex())) {
+                if (studentManager.resetUserPassword(userHashMap.get(userComboBox.getSelectedIndex()))) {
+                    studentManager.showSuccessMessageDialog("Das Passwort des Nutzers wurde zurückgesetzt. Er erhält sein neues Passwort an seine E-Mail-Adresse.", jFrame);
+                } else {
+                    studentManager.showErrorMessageDialog("Das Passwort konnte nicht zurückgesetzt werden!", jFrame);
                 }
+                jFrame.setVisible(false);
+                jFrame.dispose();
             }
         });
     }
@@ -108,4 +113,5 @@ public class ResetPassword {
             this.userComboBox.setSelectedIndex(0);
         }
     }
+
 }
