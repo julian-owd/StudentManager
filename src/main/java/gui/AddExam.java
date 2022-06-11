@@ -22,8 +22,8 @@ public class AddExam {
     private JTextArea addedGrades;
     private JButton notenSpeichernButton;
 
-    private HashMap<String, Student> studentHashMap;
-    private HashMap<Student, Integer> gradeMap;
+    private final HashMap<String, Student> studentHashMap;
+    private final HashMap<Student, Integer> gradeMap;
 
     /**
      * Opens the AddExam view

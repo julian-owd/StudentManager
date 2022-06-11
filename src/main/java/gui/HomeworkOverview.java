@@ -18,7 +18,7 @@ public class HomeworkOverview {
     private JList homeworkList;
     private DefaultListModel<String> homeworkModel;
 
-    private HashMap<Integer, Homework> homeworkHashMap = new HashMap<>();
+    private final HashMap<Integer, Homework> homeworkHashMap = new HashMap<>();
 
     /**
      * Opens the HomeworkOverview

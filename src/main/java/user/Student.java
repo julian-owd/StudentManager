@@ -46,8 +46,6 @@ public class Student extends User {
 
     @Override
     public String toString() {
-        return "Student{" + super.toString() +
-                "doneHomework=" + doneHomework +
-                '}';
+        return "Student{" + super.toString() + "doneHomework=" + doneHomework + '}';
     }
 }

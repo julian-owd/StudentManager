@@ -38,9 +38,6 @@ public class Teacher extends User {
 
     @Override
     public String toString() {
-        return "Teacher{" + super.toString() +
-                "isSick=" + isSick +
-                ", isAdmin=" + isAdmin +
-                '}';
+        return "Teacher{" + super.toString() + "isSick=" + isSick + ", isAdmin=" + isAdmin + '}';
     }
 }

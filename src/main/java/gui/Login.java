@@ -46,8 +46,7 @@ public class Login {
                 panel1.setVisible(false);
                 new MainMenu(jFrame, studentManager);
             } else {
-                studentManager.showErrorMessageDialog("Deine Anmeldedaten stimmen mit keinem Account überein!\n" +
-                        "Wenn du du dein Passwort vergessen hast, wende dich an einen Administrator.", jFrame);
+                studentManager.showErrorMessageDialog("Deine Anmeldedaten stimmen mit keinem Account überein!\n" + "Wenn du du dein Passwort vergessen hast, wende dich an einen Administrator.", jFrame);
             }
         });
     }

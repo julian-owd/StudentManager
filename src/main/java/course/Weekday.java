@@ -10,13 +10,9 @@ import lombok.Getter;
 @Getter
 public enum Weekday {
 
-    MON("Montag"),
-    TUE("Dienstag"),
-    WED("Mittwoch"),
-    THR("Donnerstag"),
-    FRI("Freitag");
+    MON("Montag"), TUE("Dienstag"), WED("Mittwoch"), THR("Donnerstag"), FRI("Freitag");
 
-    private String designation;
+    private final String designation;
 
     Weekday(String designation) {
         this.designation = designation;

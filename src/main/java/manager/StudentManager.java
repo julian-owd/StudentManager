@@ -70,6 +70,13 @@ public class StudentManager {
     }
 
     /**
+     * Starts the program
+     */
+    public static void main(String[] args) {
+        new StudentManager();
+    }
+
+    /**
      * login into an existing account
      *
      * @param email    the email of the user
@@ -255,7 +262,7 @@ public class StudentManager {
             this.database.query("DELETE FROM teacher WHERE uID=" + user.getUID());*/
             this.database.query("DELETE FROM user WHERE uID=" + user.getUID());
 
-            for (Course course : this.courses)  {
+            for (Course course : this.courses) {
                 course.getTeachers().remove(user);
             }
             return true;
@@ -266,7 +273,7 @@ public class StudentManager {
             this.database.query("DELETE FROM exam WHERE uID=" + user.getUID());*/
             this.database.query("DELETE FROM user WHERE uID=" + user.getUID());
 
-            for (Course course : this.courses)  {
+            for (Course course : this.courses) {
                 if (course.getStudents().remove(user)) {
                     for (Entry entry : course.getEntries()) {
                         entry.getParticipants().remove(user);
@@ -298,7 +305,7 @@ public class StudentManager {
     /**
      * Change the email of a user
      *
-     * @param user the user to set a new email
+     * @param user  the user to set a new email
      * @param email the new email
      */
     public void changeUserEmail(User user, String email) {
@@ -309,7 +316,7 @@ public class StudentManager {
     /**
      * Change the password of a user
      *
-     * @param user the user to set a new passwort
+     * @param user     the user to set a new passwort
      * @param password the new password
      */
     public void changeUserPassword(User user, String password) {
@@ -321,7 +328,7 @@ public class StudentManager {
      * Change whether a user is marked as sick or not
      *
      * @param user the user to change the status from
-     * @param b true if the user has to be set to sick, false if the user has to be set to not sick
+     * @param b    true if the user has to be set to sick, false if the user has to be set to not sick
      */
     public void changeUserPresenceStatus(User user, boolean b) {
         int i;
@@ -380,7 +387,7 @@ public class StudentManager {
      * adds a new course
      *
      * @param designation name of the course
-     * @param weekdays weekdays in which the course is held
+     * @param weekdays    weekdays in which the course is held
      * @return returns the course object, null if any errors occurred
      */
     public Course addCourse(String designation, ArrayList<Integer> weekdays) {
@@ -400,10 +407,10 @@ public class StudentManager {
     /**
      * adds a new entry
      *
-     * @param course course that is assigned to the entry
-     * @param date date of the entry
-     * @param title title of the entry
-     * @param description describes the entry
+     * @param course       course that is assigned to the entry
+     * @param date         date of the entry
+     * @param title        title of the entry
+     * @param description  describes the entry
      * @param participants list of participants
      * @return returns the entry object, null if any errors occurred
      */
@@ -424,7 +431,7 @@ public class StudentManager {
     /**
      * adds Homework to a specific Entry
      *
-     * @param entry entry, in which the homework is added
+     * @param entry       entry, in which the homework is added
      * @param designation describes the homework
      * @return returns the homework object, null if any errors occurred
      */
@@ -445,9 +452,9 @@ public class StudentManager {
     /**
      * adds a specific exam to a course
      *
-     * @param course course, in which the exam is held
+     * @param course      course, in which the exam is held
      * @param designation name of the exam
-     * @param students list of students with their grades
+     * @param students    list of students with their grades
      * @return returns the exam object, null if any errors occurred
      */
     public Exam addExam(Course course, String designation, HashMap<Student, Integer> students) {
@@ -512,7 +519,6 @@ public class StudentManager {
         }
         return null;
     }
-
 
     /**
      * Search for a course based on its id Important: The list must be sorted
@@ -645,9 +651,7 @@ public class StudentManager {
      * @return if the sending was successful
      */
     public boolean sendMail(String email, String subject, String message) {
-        System.out.println("Die sendMail-Methode ist nicht für Vorführungszwecke verfügbar, " +
-                "da die Domain auf mich (Julian) läuft und potenziell missbraucht werden könnte. " +
-                "Falls eine Vorführung gewünscht ist, kann dies in Präsenz erfolgen.");
+        System.out.println("Die sendMail-Methode ist nicht für Vorführungszwecke verfügbar, " + "da die Domain auf mich (Julian) läuft und potenziell missbraucht werden könnte. " + "Falls eine Vorführung gewünscht ist, kann dies in Präsenz erfolgen.");
         return true;
         /*// which mail server we want to use and some properties of it
         Properties properties = System.getProperties();
@@ -702,13 +706,6 @@ public class StudentManager {
      */
     public void showSuccessMessageDialog(String message, JFrame jFrame) {
         JOptionPane.showMessageDialog(jFrame, message, "Erfolg", JOptionPane.INFORMATION_MESSAGE);
-    }
-
-    /**
-     * Starts the program
-     */
-    public static void main(String[] args) {
-        new StudentManager();
     }
 
 }

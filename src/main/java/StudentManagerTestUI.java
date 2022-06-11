@@ -1,87 +1,22 @@
-import course.Course;
-import course.Date;
 import manager.SQLManager;
-import manager.StudentManager;
-import user.Student;
-import user.User;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class StudentManagerTestUI {
 
     public static void main(String[] args) {
         SQLManager sql = new SQLManager("localhost", "studentmanager", "root", "", 3306);
 
-        sql.query(
-                "INSERT INTO `user` "
-                        + "(`uID`, `lastName`, `firstName`, `email`, `password`) VALUES"
-                        + "('1', 'Oswald', 'Julian', 'julian.oswald@tls-giessen.eu', '1234'), "
-                        + "('2', 'Roth', 'Elias', 'elias.roth@tls-giessen.eu', '1234'),"
-                        + "('3', 'Iduh', 'Kenny', 'kenny.iduh@tls-giessen.eu', '1234'),"
-                        + "('4', 'Drescher', 'Bela', 'bela.drescher@tls-giessen.eu', '1234'),"
-                        + "('5', 'Nguyen', 'Cong', 'cong.ngyuen@tls-giessen.eu', '1234')");
-        sql.query(
-                "INSERT INTO `teacher` "
-                        + "(`uID`, `isSick`, `isAdmin`) VALUES"
-                        + "('1', '1', '1'), "
-                        + "('5', '1', '0')");
-        sql.query(
-                "INSERT INTO `course` "
-                        + "(`cID`, `designation`) VALUES"
-                        + "('1', '12BGPI'),"
-                        + "('2', '12BGGeschi')");
-        sql.query(
-                "INSERT INTO `course_weekday`"
-                        + "(`cID`, `weekday`) VALUES"
-                        + "('1', '1'),"
-                        + "('1', '3'),"
-                        + "('2', '3'),"
-                        + "('2', '5')");
-        sql.query(
-                "INSERT INTO `student_course`"
-                        + "(`uID`, `cID`) VALUES"
-                        + "('2', '1'),"
-                        + "('3', '1'),"
-                        + "('4', '1'),"
-                        + "('2', '2'),"
-                        + "('3', '2')");
-        sql.query(
-                "INSERT INTO `teacher_course`" + "(`uID`, `cID`) VALUES" + "('1', '1')," + "('5', '2')");
-        sql.query(
-                "INSERT INTO `entry`"
-                        + "(`eID`, `date`, `title`, `description`, `cID`) VALUES"
-                        + "('1', '2022-05-02', 'Einstieg Joins', 'Moodle Kurs AB Joins 2', '1'),"
-                        + "('2', '2022-05-04', 'Netzwerkkabel patchen', 'Netzwerkkabel mit Auszubildenden gepatcht', '1'),"
-                        + "('3', '2022-05-06', 'Einstieg Ersatzleistung', 'Vorstellung der Ersatzleistung & Arbeitsbeginn', '2')");
-        sql.query(
-                "INSERT INTO `student_entry`"
-                        + "(`uID`, `eID`) VALUES"
-                        + "('2', '1'),"
-                        + "('3', '1'),"
-                        + "('4', '1'),"
-                        + "('2', '2'),"
-                        + "('3', '2'),"
-                        + "('2', '3'),"
-                        + "('4', '3')");
-        sql.query(
-                "INSERT INTO `homework`"
-                        + "(`hID`, `designation`, `eID`) VALUES"
-                        + "('1', 'AB Joins 2 fertigstellen', '1'),"
-                        + "('2', 'Ersatzleistung fortsetzen', '3')");
-        sql.query(
-                "INSERT INTO `exam`"
-                        + "(`eID`, `designation`, `cID`) VALUES"
-                        + "('1', 'PI Leistungskontrolle 1 Q2', '1'),"
-                        + "('2', 'Geschi Mündlich 2.2.22', '2')");
+        sql.query("INSERT INTO `user` " + "(`uID`, `lastName`, `firstName`, `email`, `password`) VALUES" + "('1', 'Oswald', 'Julian', 'julian.oswald@tls-giessen.eu', '1234'), " + "('2', 'Roth', 'Elias', 'elias.roth@tls-giessen.eu', '1234')," + "('3', 'Iduh', 'Kenny', 'kenny.iduh@tls-giessen.eu', '1234')," + "('4', 'Drescher', 'Bela', 'bela.drescher@tls-giessen.eu', '1234')," + "('5', 'Nguyen', 'Cong', 'cong.ngyuen@tls-giessen.eu', '1234')");
+        sql.query("INSERT INTO `teacher` " + "(`uID`, `isSick`, `isAdmin`) VALUES" + "('1', '1', '1'), " + "('5', '1', '0')");
+        sql.query("INSERT INTO `course` " + "(`cID`, `designation`) VALUES" + "('1', '12BGPI')," + "('2', '12BGGeschi')");
+        sql.query("INSERT INTO `course_weekday`" + "(`cID`, `weekday`) VALUES" + "('1', '1')," + "('1', '3')," + "('2', '3')," + "('2', '5')");
+        sql.query("INSERT INTO `student_course`" + "(`uID`, `cID`) VALUES" + "('2', '1')," + "('3', '1')," + "('4', '1')," + "('2', '2')," + "('3', '2')");
+        sql.query("INSERT INTO `teacher_course`" + "(`uID`, `cID`) VALUES" + "('1', '1')," + "('5', '2')");
+        sql.query("INSERT INTO `entry`" + "(`eID`, `date`, `title`, `description`, `cID`) VALUES" + "('1', '2022-05-02', 'Einstieg Joins', 'Moodle Kurs AB Joins 2', '1')," + "('2', '2022-05-04', 'Netzwerkkabel patchen', 'Netzwerkkabel mit Auszubildenden gepatcht', '1')," + "('3', '2022-05-06', 'Einstieg Ersatzleistung', 'Vorstellung der Ersatzleistung & Arbeitsbeginn', '2')");
+        sql.query("INSERT INTO `student_entry`" + "(`uID`, `eID`) VALUES" + "('2', '1')," + "('3', '1')," + "('4', '1')," + "('2', '2')," + "('3', '2')," + "('2', '3')," + "('4', '3')");
+        sql.query("INSERT INTO `homework`" + "(`hID`, `designation`, `eID`) VALUES" + "('1', 'AB Joins 2 fertigstellen', '1')," + "('2', 'Ersatzleistung fortsetzen', '3')");
+        sql.query("INSERT INTO `exam`" + "(`eID`, `designation`, `cID`) VALUES" + "('1', 'PI Leistungskontrolle 1 Q2', '1')," + "('2', 'Geschi Mündlich 2.2.22', '2')");
 
-        sql.query("INSERT INTO `student_exam`" +
-                "(`uID`, `eID`, `grade`) VALUES" +
-                "('2', '1', '13')," +
-                "('3', '1', '10')," +
-                "('4', '1', '6')," +
-                "('2', '2', '1')," +
-                "('3', '2', '7'),");
+        sql.query("INSERT INTO `student_exam`" + "(`uID`, `eID`, `grade`) VALUES" + "('2', '1', '13')," + "('3', '1', '10')," + "('4', '1', '6')," + "('2', '2', '1')," + "('3', '2', '7')");
 /*
         StudentManager sm = new StudentManager();
 

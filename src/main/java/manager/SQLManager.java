@@ -50,101 +50,40 @@ public class SQLManager {
                 statement.executeUpdate("USE " + this.database); // use database
 
                 // create table user
-                statement.executeUpdate("CREATE TABLE IF NOT EXISTS user " +
-                        "(uID INT(8) NOT NULL AUTO_INCREMENT, " +
-                        "lastName VARCHAR(50) NOT NULL, " +
-                        "firstName VARCHAR(50) NOT NULL, " +
-                        "email VARCHAR(100) NOT NULL, " +
-                        "password VARCHAR(256) NOT NULL, " +
-                        "PRIMARY KEY(uID))");
+                statement.executeUpdate("CREATE TABLE IF NOT EXISTS user " + "(uID INT(8) NOT NULL AUTO_INCREMENT, " + "lastName VARCHAR(50) NOT NULL, " + "firstName VARCHAR(50) NOT NULL, " + "email VARCHAR(100) NOT NULL, " + "password VARCHAR(256) NOT NULL, " + "PRIMARY KEY(uID))");
 
                 // create table teacher
-                statement.executeUpdate("CREATE TABLE IF NOT EXISTS teacher " +
-                        "(isSick TINYINT(1) NOT NULL, " +
-                        "isAdmin TINYINT(1) NOT NULL, " +
-                        "uID INT(8) NOT NULL, " +
-                        "PRIMARY KEY(uID), " +
-                        "FOREIGN KEY(uID) REFERENCES user(uID) ON DELETE CASCADE)");
+                statement.executeUpdate("CREATE TABLE IF NOT EXISTS teacher " + "(isSick TINYINT(1) NOT NULL, " + "isAdmin TINYINT(1) NOT NULL, " + "uID INT(8) NOT NULL, " + "PRIMARY KEY(uID), " + "FOREIGN KEY(uID) REFERENCES user(uID) ON DELETE CASCADE)");
 
                 // create table course
-                statement.executeUpdate("CREATE TABLE IF NOT EXISTS course " +
-                        "(cID INT(8) NOT NULL AUTO_INCREMENT, " +
-                        "designation VARCHAR(50) NOT NULL, " +
-                        "PRIMARY KEY(cID))");
+                statement.executeUpdate("CREATE TABLE IF NOT EXISTS course " + "(cID INT(8) NOT NULL AUTO_INCREMENT, " + "designation VARCHAR(50) NOT NULL, " + "PRIMARY KEY(cID))");
 
                 // create table entry
-                statement.executeUpdate("CREATE TABLE IF NOT EXISTS entry " +
-                        "(eID INT(8) NOT NULL AUTO_INCREMENT, " +
-                        "date DATE NOT NULL, " +
-                        "title VARCHAR(100) NOT NULL, " +
-                        "description VARCHAR(5000) NOT NULL, " +
-                        "cID INT(8)," +
-                        "PRIMARY KEY(eID)," +
-                        "FOREIGN KEY(cID) REFERENCES course(cID) ON DELETE CASCADE)");
+                statement.executeUpdate("CREATE TABLE IF NOT EXISTS entry " + "(eID INT(8) NOT NULL AUTO_INCREMENT, " + "date DATE NOT NULL, " + "title VARCHAR(100) NOT NULL, " + "description VARCHAR(5000) NOT NULL, " + "cID INT(8)," + "PRIMARY KEY(eID)," + "FOREIGN KEY(cID) REFERENCES course(cID) ON DELETE CASCADE)");
 
                 // create table exam
-                statement.executeUpdate("CREATE TABLE IF NOT EXISTS exam " +
-                        "(eID INT(8) NOT NULL AUTO_INCREMENT, " +
-                        "designation VARCHAR(200) NOT NULL, " +
-                        "cID INT(8)," +
-                        "PRIMARY KEY(eID)," +
-                        "FOREIGN KEY(cID) REFERENCES course(cID) ON DELETE CASCADE)");
+                statement.executeUpdate("CREATE TABLE IF NOT EXISTS exam " + "(eID INT(8) NOT NULL AUTO_INCREMENT, " + "designation VARCHAR(200) NOT NULL, " + "cID INT(8)," + "PRIMARY KEY(eID)," + "FOREIGN KEY(cID) REFERENCES course(cID) ON DELETE CASCADE)");
 
                 // create table homework
-                statement.executeUpdate("CREATE TABLE IF NOT EXISTS homework " +
-                        "(hID INT(8) NOT NULL AUTO_INCREMENT, " +
-                        "designation VARCHAR(500) NOT NULL, " +
-                        "eID INT(8)," +
-                        "PRIMARY KEY(hID)," +
-                        "FOREIGN KEY(eID) REFERENCES entry(eID) ON DELETE CASCADE)");
+                statement.executeUpdate("CREATE TABLE IF NOT EXISTS homework " + "(hID INT(8) NOT NULL AUTO_INCREMENT, " + "designation VARCHAR(500) NOT NULL, " + "eID INT(8)," + "PRIMARY KEY(hID)," + "FOREIGN KEY(eID) REFERENCES entry(eID) ON DELETE CASCADE)");
 
                 // create table student_course
-                statement.executeUpdate("CREATE TABLE IF NOT EXISTS student_course " +
-                        "(uID INT(8) NOT NULL, " +
-                        "cID INT(8) NOT NULL, " +
-                        "PRIMARY KEY(uID, cID), " +
-                        "FOREIGN KEY(uID) REFERENCES user(uID) ON DELETE CASCADE, " +
-                        "FOREIGN KEY(cID) REFERENCES course(cID) ON DELETE CASCADE)");
+                statement.executeUpdate("CREATE TABLE IF NOT EXISTS student_course " + "(uID INT(8) NOT NULL, " + "cID INT(8) NOT NULL, " + "PRIMARY KEY(uID, cID), " + "FOREIGN KEY(uID) REFERENCES user(uID) ON DELETE CASCADE, " + "FOREIGN KEY(cID) REFERENCES course(cID) ON DELETE CASCADE)");
 
                 // create table student_entry
-                statement.executeUpdate("CREATE TABLE IF NOT EXISTS student_entry " +
-                        "(uID INT(8) NOT NULL, " +
-                        "eID INT(8) NOT NULL, " +
-                        "PRIMARY KEY(uID, eID), " +
-                        "FOREIGN KEY(uID) REFERENCES user(uID) ON DELETE CASCADE, " +
-                        "FOREIGN KEY(eID) REFERENCES entry(eID) ON DELETE CASCADE)");
+                statement.executeUpdate("CREATE TABLE IF NOT EXISTS student_entry " + "(uID INT(8) NOT NULL, " + "eID INT(8) NOT NULL, " + "PRIMARY KEY(uID, eID), " + "FOREIGN KEY(uID) REFERENCES user(uID) ON DELETE CASCADE, " + "FOREIGN KEY(eID) REFERENCES entry(eID) ON DELETE CASCADE)");
 
                 // create table student_homework
-                statement.executeUpdate("CREATE TABLE IF NOT EXISTS student_homework " +
-                        "(uID INT(8) NOT NULL, " +
-                        "hID INT(8) NOT NULL, " +
-                        "PRIMARY KEY(uID, hID), " +
-                        "FOREIGN KEY(uID) REFERENCES user(uID) ON DELETE CASCADE, " +
-                        "FOREIGN KEY(hID) REFERENCES homework(hID) ON DELETE CASCADE)");
+                statement.executeUpdate("CREATE TABLE IF NOT EXISTS student_homework " + "(uID INT(8) NOT NULL, " + "hID INT(8) NOT NULL, " + "PRIMARY KEY(uID, hID), " + "FOREIGN KEY(uID) REFERENCES user(uID) ON DELETE CASCADE, " + "FOREIGN KEY(hID) REFERENCES homework(hID) ON DELETE CASCADE)");
 
                 // create table student_exam
-                statement.executeUpdate("CREATE TABLE IF NOT EXISTS student_exam " +
-                        "(uID INT(8) NOT NULL, " +
-                        "eID INT(8) NOT NULL, " +
-                        "grade INT (2) NOT NULL, " +
-                        "PRIMARY KEY(uID, eID), " +
-                        "FOREIGN KEY(uID) REFERENCES user(uID) ON DELETE CASCADE, " +
-                        "FOREIGN KEY(eID) REFERENCES exam(eID) ON DELETE CASCADE)");
+                statement.executeUpdate("CREATE TABLE IF NOT EXISTS student_exam " + "(uID INT(8) NOT NULL, " + "eID INT(8) NOT NULL, " + "grade INT (2) NOT NULL, " + "PRIMARY KEY(uID, eID), " + "FOREIGN KEY(uID) REFERENCES user(uID) ON DELETE CASCADE, " + "FOREIGN KEY(eID) REFERENCES exam(eID) ON DELETE CASCADE)");
 
                 // create table teacher_course
-                statement.executeUpdate("CREATE TABLE IF NOT EXISTS teacher_course " +
-                        "(uID INT(8) NOT NULL, " +
-                        "cID INT(8) NOT NULL, " +
-                        "PRIMARY KEY(uID, cID), " +
-                        "FOREIGN KEY(uID) REFERENCES user(uID) ON DELETE CASCADE, " +
-                        "FOREIGN KEY(cID) REFERENCES course(cID) ON DELETE CASCADE)");
+                statement.executeUpdate("CREATE TABLE IF NOT EXISTS teacher_course " + "(uID INT(8) NOT NULL, " + "cID INT(8) NOT NULL, " + "PRIMARY KEY(uID, cID), " + "FOREIGN KEY(uID) REFERENCES user(uID) ON DELETE CASCADE, " + "FOREIGN KEY(cID) REFERENCES course(cID) ON DELETE CASCADE)");
 
                 // create table course_weekday
-                statement.executeUpdate("CREATE TABLE IF NOT EXISTS course_weekday " +
-                        "(cID INT(8) NOT NULL, " +
-                        "weekday INT(8) NOT NULL, " +
-                        "PRIMARY KEY(cID, weekday), " +
-                        "FOREIGN KEY(cID) REFERENCES course(cID) ON DELETE CASCADE)");
+                statement.executeUpdate("CREATE TABLE IF NOT EXISTS course_weekday " + "(cID INT(8) NOT NULL, " + "weekday INT(8) NOT NULL, " + "PRIMARY KEY(cID, weekday), " + "FOREIGN KEY(cID) REFERENCES course(cID) ON DELETE CASCADE)");
 
                 statement.close();
             } catch (SQLException e) {

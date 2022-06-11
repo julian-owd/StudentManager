@@ -17,7 +17,7 @@ public class ResetPassword {
     private JButton abbrechenButton;
     private JButton zurücksetzenButton;
 
-    private HashMap<Integer, User> userHashMap;
+    private final HashMap<Integer, User> userHashMap;
 
     /**
      * Opens the ResetPassword view

@@ -40,9 +40,6 @@ public class Homework {
 
     @Override
     public String toString() {
-        return "Homework{" +
-                "hID=" + hID +
-                ", designation='" + designation + '\'' +
-                '}';
+        return "Homework{" + "hID=" + hID + ", designation='" + designation + '\'' + '}';
     }
 }

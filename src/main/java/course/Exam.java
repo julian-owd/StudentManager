@@ -53,10 +53,6 @@ public class Exam {
 
     @Override
     public String toString() {
-        return "Exam{" +
-                "eID=" + eID +
-                ", designation='" + designation + '\'' +
-                ", student=" + grades +
-                '}';
+        return "Exam{" + "eID=" + eID + ", designation='" + designation + '\'' + ", student=" + grades + '}';
     }
 }

@@ -27,8 +27,8 @@ public class CreateCourse {
     private JCheckBox freitagCheckBox;
     private JLabel aktuelleTeilnehmerLabel;
 
-    private ArrayList<User> users;
-    private HashMap<Integer, User> userComboBoxHashMap;
+    private final ArrayList<User> users;
+    private final HashMap<Integer, User> userComboBoxHashMap;
 
     /**
      * Opens the CreateCourse view

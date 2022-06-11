@@ -26,8 +26,8 @@ public class AddEntry {
     private JLabel homeworkLabel;
     private JTextArea designationTextArea;
 
-    private HashMap<String, Student> studentHashMap;
-    private ArrayList<Student> participants;
+    private final HashMap<String, Student> studentHashMap;
+    private final ArrayList<Student> participants;
 
     /**
      * Opens the AddEntry view

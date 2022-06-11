@@ -25,10 +25,10 @@ public class ManageParticipants {
     private JButton änderungenÜbernehmenButton;
     private JButton nutzerZumKursHinzufügenButton;
 
-    private ArrayList<User> usersToAdd;
-    private ArrayList<User> usersToRemove;
-    private HashMap<Integer, User> userComboBoxHashMap;
-    private HashMap<Integer, User> userJListHashMap;
+    private final ArrayList<User> usersToAdd;
+    private final ArrayList<User> usersToRemove;
+    private final HashMap<Integer, User> userComboBoxHashMap;
+    private final HashMap<Integer, User> userJListHashMap;
     private DefaultListModel<String> userModel;
 
     /**

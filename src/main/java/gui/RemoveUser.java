@@ -17,7 +17,7 @@ public class RemoveUser {
     private JButton entfernenButton;
     private JPanel panel1;
 
-    private HashMap<Integer, User> userHashMap;
+    private final HashMap<Integer, User> userHashMap;
 
     /**
      * Opens the RemoveUser view

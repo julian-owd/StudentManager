@@ -62,13 +62,6 @@ public class Entry {
 
     @Override
     public String toString() {
-        return "Entry{" +
-                "eID=" + eID +
-                ", date=" + date +
-                ", title='" + title + '\'' +
-                ", designation='" + designation + '\'' +
-                ", homework=" + homework +
-                ", participants=" + participants +
-                '}';
+        return "Entry{" + "eID=" + eID + ", date=" + date + ", title='" + title + '\'' + ", designation='" + designation + '\'' + ", homework=" + homework + ", participants=" + participants + '}';
     }
 }
