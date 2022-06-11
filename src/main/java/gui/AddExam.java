@@ -3,10 +3,13 @@ package gui;
 import course.Course;
 import manager.StudentManager;
 import user.Student;
+import user.User;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.stream.Collectors;
 
 public class AddExam {
     private JComboBox studentComboBox;
@@ -43,10 +46,12 @@ public class AddExam {
 
         this.gradeLabel.setText(String.valueOf(this.gradeSlider.getValue()));
 
+        ArrayList<Student> students = course.getStudents().stream().sorted(User::compareTo).collect(Collectors.toCollection(ArrayList::new));
+
         // filling the combobox with the students of this course
-        for (int i = 0; i < course.getStudents().size(); i++) {
-            this.studentHashMap.put(course.getStudents().get(i).getFirstName() + " " + course.getStudents().get(i).getLastName(), course.getStudents().get(i));
-            this.studentComboBox.addItem(course.getStudents().get(i).getFirstName() + " " + course.getStudents().get(i).getLastName());
+        for (int i = 0; i < students.size(); i++) {
+            this.studentHashMap.put(students.get(i).getFirstName() + " " + students.get(i).getLastName(), students.get(i));
+            this.studentComboBox.addItem(students.get(i).getFirstName() + " " + students.get(i).getLastName());
         }
 
         // listener of the slider
@@ -81,22 +86,14 @@ public class AddExam {
                 return;
             }
 
-            boolean error = false;
-            int errorCount = 0;
-            for (Student student : gradeMap.keySet()) {
-                if (studentManager.addExam(student, course, designationField.getText(), gradeMap.get(student)) == null) {
-                    studentManager.showErrorMessageDialog("Die Note von " + student.getFirstName() + " " + student.getLastName() + " konnte nicht gespeichert werden!", jFrame);
-                    error = true;
-                    errorCount++;
-                }
+            if (studentManager.addExam(course, designationField.getText(), gradeMap) != null) {
+                studentManager.showSuccessMessageDialog("Die Noten wurden gespeichert.", jFrame);
+            } else {
+                studentManager.showErrorMessageDialog("Es konnten eventuell nicht alle Noten gespeichert werden!", jFrame);
             }
 
             panel1.setVisible(false);
             new TeacherCourseDetail(jFrame, studentManager, course);
-            if (error) {
-                studentManager.showErrorMessageDialog("Es sind  " + errorCount + " Fehler aufgetreten!", jFrame);
-            }
-            studentManager.showSuccessMessageDialog("Es wurden " + (gradeMap.size() - errorCount) + " Noten eingetragen.", jFrame);
         });
 
         // listener of the back button

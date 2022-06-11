@@ -56,8 +56,8 @@ public class TeacherCourseDetail {
             double sumExams = 0;
             int numberExams = 0;
             for (Exam exam : course.getExams()) {
-                if (exam.getStudent().getUID() == student.getUID()) {
-                    sumExams += exam.getGrade();
+                if (exam.getGrades().containsKey(student)) {
+                    sumExams += exam.getGrades().get(student);
                     numberExams++;
                 }
             }

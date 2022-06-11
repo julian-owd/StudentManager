@@ -68,7 +68,7 @@ public class StudentCourseDetail {
                 this.dateModel.addElement(entry.getDate().toString());
             }
 
-            this.topicModel.addElement(entry.getDesignation());
+            this.topicModel.addElement(entry.getTitle());
 
             if (entry.getParticipants().contains(student)) {
                 this.presenceModel.addElement("Anwesend");
@@ -79,8 +79,8 @@ public class StudentCourseDetail {
 
         // loads the existing exams
         for (Exam exam : course.getExams()) {
-            if (exam.getStudent().equals(studentManager.getCurrentUser())) {
-                this.gradeModel.addElement("• " + exam.getDesignation() + ": " + exam.getGrade() + " NP");
+            if (exam.getGrades().containsKey(studentManager.getCurrentUser())) {
+                this.gradeModel.addElement("• " + exam.getDesignation() + ": " + exam.getGrades().get(studentManager.getCurrentUser()) + " NP");
             }
         }
 
@@ -99,10 +99,10 @@ public class StudentCourseDetail {
                     return;
                 }
                 String dateString = String.valueOf(dateList.getSelectedValue()).replace(" (Hausaufgabe verfügbar)", "");
-                String designation = topicModel.getElementAt(selectedIndex);
+                String title = topicModel.getElementAt(selectedIndex);
                 Entry entry = null;
                 for (Entry ent : course.getEntries()) {
-                    if (ent.getDate().toString().equals(dateString) && designation.equalsIgnoreCase(ent.getDesignation())) {
+                    if (ent.getDate().toString().equals(dateString) && title.equalsIgnoreCase(ent.getTitle())) {
                         entry = ent;
                         break;
                     }
@@ -113,6 +113,47 @@ public class StudentCourseDetail {
                 }
                 new HomeworkDetail(jFrame, studentManager, entry, course);
                 panel1.setVisible(false);
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+
+            }
+        });
+
+        this.topicList.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                int selectedIndex = topicList.getSelectedIndex();
+                String dateString = String.valueOf(dateModel.getElementAt(selectedIndex)).replace(" (Hausaufgabe verfügbar)", "");
+                String title = String.valueOf(topicList.getSelectedValue());
+                Entry entry = null;
+                for (Entry ent : course.getEntries()) {
+                    if (ent.getDate().toString().equals(dateString) && title.equalsIgnoreCase(ent.getTitle())) {
+                        entry = ent;
+                        break;
+                    }
+                }
+                if (entry == null) {
+                    studentManager.showErrorMessageDialog("Es gab einen Fehler beim Laden der Hausaufgabe", jFrame);
+                    return;
+                }
+                JOptionPane.showMessageDialog(jFrame, "Inhalt der Stunde: " + entry.getDesignation(), dateString, JOptionPane.INFORMATION_MESSAGE);
             }
 
             @Override
