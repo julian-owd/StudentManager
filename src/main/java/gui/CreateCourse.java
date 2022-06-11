@@ -8,6 +8,8 @@ import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.stream.Collectors;
 
 public class CreateCourse {
     private JTextField kursbezeichnungTextField;
@@ -26,6 +28,7 @@ public class CreateCourse {
     private JLabel aktuelleTeilnehmerLabel;
 
     private ArrayList<User> users;
+    private HashMap<Integer, User> userComboBoxHashMap;
 
     /**
      * Opens the CreateCourse view
@@ -43,6 +46,7 @@ public class CreateCourse {
         jFrame.getRootPane().setDefaultButton(this.kursHinzufügenButton);
 
         this.users = new ArrayList<>();
+        this.userComboBoxHashMap = new HashMap<>();
         this.users.add(studentManager.getCurrentUser());
         this.userTextArea.setText(this.userTextArea.getText() + studentManager.getCurrentUser().getEmail() + "\n");
 
@@ -72,11 +76,14 @@ public class CreateCourse {
             if (userComboBox.getSelectedItem() == null) {
                 return;
             }
-            User user = studentManager.findUser(String.valueOf(userComboBox.getSelectedItem()));
-            users.add(user);
-            userTextArea.setText(userTextArea.getText() + user.getEmail() + "\n");
-            loadComboBox(userComboBox, studentManager);
-            aktuelleTeilnehmerLabel.setText("Aktuelle Teilnehmer (" + users.size() + ")");
+            if (userComboBoxHashMap.containsKey(userComboBox.getSelectedIndex())) {
+                User user = userComboBoxHashMap.get(userComboBox.getSelectedIndex());
+                users.add(user);
+                userTextArea.setText(userTextArea.getText() + user.getEmail() + "\n");
+                userTextField.setText("");
+                loadComboBox(userComboBox, studentManager);
+                aktuelleTeilnehmerLabel.setText("Aktuelle Teilnehmer (" + users.size() + ")");
+            }
         });
 
         // listener of the cancel button
@@ -123,13 +130,12 @@ public class CreateCourse {
             }
 
             if (studentManager.addCourse(kursbezeichnungTextField.getText(), weekdays) != null) {
-                panel1.setVisible(false);
-                new CoursesOverview(jFrame, studentManager);
-                studentManager.showSuccessMessageDialog("Der Kurs " + kursbezeichnungTextField.getText() + " wurde erstellt.", jFrame);
-
                 if (!studentManager.addUserToCourse(users, studentManager.findCourse(kursbezeichnungTextField.getText()))) {
                     studentManager.showErrorMessageDialog("Es konnten nicht alle Schüler dem Kurs hinzugefügt werden!", jFrame);
                 }
+                panel1.setVisible(false);
+                new CoursesOverview(jFrame, studentManager);
+                studentManager.showSuccessMessageDialog("Der Kurs " + kursbezeichnungTextField.getText() + " wurde erstellt.", jFrame);
             } else {
                 studentManager.showErrorMessageDialog("Der Kurs konnte nicht erstellt werden!", jFrame);
             }
@@ -148,10 +154,12 @@ public class CreateCourse {
             loadComboBoxFiltered(jComboBox, studentManager);
             return;
         }
-        for (User user : studentManager.getUsers()) {
-            if (!this.users.contains(user)) {
-                jComboBox.addItem(user.getEmail());
-            }
+
+        ArrayList<User> users = studentManager.getUsers().stream().filter(user -> !this.users.contains(user)).sorted(User::compareTo).collect(Collectors.toCollection(ArrayList::new));
+
+        for (User user : users) {
+            jComboBox.addItem(user.getFirstName() + " " + user.getLastName() + " | " + user.getEmail());
+            this.userComboBoxHashMap.put(jComboBox.getItemCount() - 1, user);
         }
     }
 
@@ -163,10 +171,12 @@ public class CreateCourse {
      */
     private void loadComboBoxFiltered(JComboBox jComboBox, StudentManager studentManager) {
         jComboBox.removeAllItems();
-        for (User user : studentManager.getUsers()) {
-            if (!this.users.contains(user) && user.getEmail().toLowerCase().startsWith(userTextField.getText().toLowerCase())) {
-                jComboBox.addItem(user.getEmail());
-            }
+
+        ArrayList<User> users = studentManager.getUsers().stream().filter(user -> !this.users.contains(user) && user.getEmail().toLowerCase().contains(this.userTextField.getText().toLowerCase())).sorted(User::compareTo).collect(Collectors.toCollection(ArrayList::new));
+
+        for (User user : users) {
+            jComboBox.addItem(user.getFirstName() + " " + user.getLastName() + " | " + user.getEmail());
+            this.userComboBoxHashMap.put(jComboBox.getItemCount() - 1, user);
         }
     }
 

@@ -86,7 +86,6 @@ public class SQLManager {
                 statement.executeUpdate("CREATE TABLE IF NOT EXISTS exam " +
                         "(eID INT(8) NOT NULL AUTO_INCREMENT, " +
                         "designation VARCHAR(200) NOT NULL, " +
-                        "grade INT(2) NOT NULL, " +
                         "cID INT(8)," +
                         "PRIMARY KEY(eID)," +
                         "FOREIGN KEY(cID) REFERENCES course(cID) ON DELETE CASCADE)");
@@ -127,6 +126,7 @@ public class SQLManager {
                 statement.executeUpdate("CREATE TABLE IF NOT EXISTS student_exam " +
                         "(uID INT(8) NOT NULL, " +
                         "eID INT(8) NOT NULL, " +
+                        "grade INT (2) NOT NULL, " +
                         "PRIMARY KEY(uID, eID), " +
                         "FOREIGN KEY(uID) REFERENCES user(uID) ON DELETE CASCADE, " +
                         "FOREIGN KEY(eID) REFERENCES exam(eID) ON DELETE CASCADE)");

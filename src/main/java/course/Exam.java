@@ -20,9 +20,8 @@ public class Exam {
 
     private int eID;
     private String designation;
-    private int grade;
     private Course course;
-    private ArrayList<Student> students;
+    private HashMap<Student, Integer> grades;
 
     /**
      * creates a new exam object
@@ -34,21 +33,20 @@ public class Exam {
     public Exam(int eID, Course course, StudentManager studentManager) {
         this.eID = eID;
         this.course = course;
-        this.students = new ArrayList<>();
+        this.grades = new HashMap<>();
 
         // loads the exam data
-        HashMap<Integer, ArrayList<String>> examData = studentManager.getDatabase().getData("SELECT designation, grade FROM exam WHERE eID=" + eID);
+        HashMap<Integer, ArrayList<String>> examData = studentManager.getDatabase().getData("SELECT designation FROM exam WHERE eID=" + eID);
         if (!examData.isEmpty()) {
             this.designation = examData.get(0).get(0);
-            this.grade = Integer.parseInt(examData.get(0).get(1));
         }
 
-        // loads the participants for this entry
-        HashMap<Integer, ArrayList<String>> studentData = studentManager.getDatabase().getData("SELECT uID FROM student_exam WHERE eID=" + eID);
+        // loads the students of this exam
+        HashMap<Integer, ArrayList<String>> studentData = studentManager.getDatabase().getData("SELECT uID, grade FROM student_exam WHERE eID=" + eID);
         for (Integer i : studentData.keySet()) {
             User student = studentManager.findUser(Integer.parseInt(studentData.get(i).get(0)));
             if (student instanceof Student) {
-                this.students.add((Student) student);
+                this.grades.put((Student) student, Integer.parseInt(studentData.get(i).get(1)));
             }
         }
     }
@@ -58,8 +56,7 @@ public class Exam {
         return "Exam{" +
                 "eID=" + eID +
                 ", designation='" + designation + '\'' +
-                ", grade=" + grade +
-                ", student=" + students +
+                ", student=" + grades +
                 '}';
     }
 }

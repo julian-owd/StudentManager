@@ -346,10 +346,10 @@ public class StudentManager {
     public boolean addUserToCourse(ArrayList<User> user, Course course) {
         for (User u : user) {
             if (u instanceof Student) {
-                this.database.query("INSERT INTO `student_course` VALUES (" + u.getUID() + "," + course.getCID() + ")");
+                this.database.query("INSERT INTO student_course VALUES (" + u.getUID() + "," + course.getCID() + ")");
                 course.getStudents().add((Student) u);
             } else {
-                this.database.query("INSERT INTO `teacher_course` VALUES (" + u.getUID() + "," + course.getCID() + ")");
+                this.database.query("INSERT INTO teacher_course VALUES (" + u.getUID() + "," + course.getCID() + ")");
                 course.getTeachers().add((Teacher) u);
             }
         }
@@ -384,16 +384,16 @@ public class StudentManager {
      * @return returns the course object, null if any errors occurred
      */
     public Course addCourse(String designation, ArrayList<Integer> weekdays) {
-        this.database.query("INSERT INTO `course` (`designation`) VALUES ('" + designation + "')");
-        HashMap<Integer, ArrayList<String>> courseData = this.database.getData("SELECT cID FROM `course` where `designation`= '" + designation + "'");
+        this.database.query("INSERT INTO course (designation) VALUES ('" + designation + "')");
+        HashMap<Integer, ArrayList<String>> courseData = this.database.getData("SELECT cID FROM course WHERE designation= '" + designation + "'");
         if (courseData.isEmpty()) {
             return null;
         }
         for (Integer weekday : weekdays) {
-            this.database.query("INSERT INTO `course_weekday` VALUES (" + Integer.parseInt(courseData.get(0).get(0)) + "," + weekday + ")");
+            this.database.query("INSERT INTO course_weekday VALUES (" + Integer.parseInt(courseData.get(0).get(0)) + "," + weekday + ")");
         }
         Course course = new Course(Integer.parseInt(courseData.get(0).get(0)), this);
-        getCourses().add(course);
+        this.courses.add(course);
         return course;
     }
 
@@ -408,13 +408,13 @@ public class StudentManager {
      * @return returns the entry object, null if any errors occurred
      */
     public Entry addEntry(Course course, Date date, String title, String description, ArrayList<Student> participants) {
-        this.database.query("INSERT INTO `entry` (`date`,`title`,`description`,`cID`) VALUES ('" + date.toSQLString() + "','" + title + "','" + description + "','" + course.getCID() + "')");
-        HashMap<Integer, ArrayList<String>> entryData = this.database.getData("SELECT eID FROM `entry` where `date`= '" + date.toSQLString() + "' AND `title`= '" + title + "' AND `description`= '" + description + "' AND cID= " + course.getCID());
+        this.database.query("INSERT INTO entry (date, title, description, cID) VALUES ('" + date.toSQLString() + "','" + title + "','" + description + "','" + course.getCID() + "')");
+        HashMap<Integer, ArrayList<String>> entryData = this.database.getData("SELECT eID FROM entry where date= '" + date.toSQLString() + "' AND title= '" + title + "' AND description= '" + description + "' AND cID= " + course.getCID());
         if (entryData.isEmpty()) {
             return null;
         }
         for (Student student : participants) {
-            this.database.query("INSERT INTO `student_entry` VALUES (" + student.getUID() + "," + Integer.parseInt(entryData.get(0).get(0)) + ")");
+            this.database.query("INSERT INTO student_entry VALUES (" + student.getUID() + "," + Integer.parseInt(entryData.get(0).get(0)) + ")");
         }
         Entry entry = new Entry(Integer.parseInt(entryData.get(0).get(0)), course, this);
         course.getEntries().add(entry);
@@ -432,8 +432,8 @@ public class StudentManager {
         if (entry.getHomework() != null) {
             return null;
         }
-        this.database.query("INSERT INTO `homework` (`designation`,`eID`) VALUES ('" + designation + "','" + entry.getEID() + "')");
-        HashMap<Integer, ArrayList<String>> homeworkData = this.database.getData("SELECT hID FROM `homework` where `designation`='" + designation + "' AND `eID`=" + entry.getEID());
+        this.database.query("INSERT INTO homework (designation, eID) VALUES ('" + designation + "','" + entry.getEID() + "')");
+        HashMap<Integer, ArrayList<String>> homeworkData = this.database.getData("SELECT hID FROM homework where designation='" + designation + "' AND eID=" + entry.getEID());
         if (homeworkData.isEmpty()) {
             return null;
         }
@@ -445,21 +445,22 @@ public class StudentManager {
     /**
      * adds a specific exam to a course
      *
-     * @param user the user, who is participating in the exam
      * @param course course, in which the exam is held
      * @param designation name of the exam
-     * @param grade grade :)
+     * @param students list of students with their grades
      * @return returns the exam object, null if any errors occurred
      */
-    public Exam addExam(User user, Course course, String designation, int grade) {
-        this.database.query("INSERT INTO `exam`(`designation`,`grade`,`cID`) VALUES ('" + designation + "','" + grade + "','" + course.getCID() + "')");
-        HashMap<Integer, ArrayList<String>> examData = this.database.getData("SELECT eID FROM `exam` WHERE designation='" + designation + "' AND grade=" + grade + " AND cID=" + course.getCID());
+    public Exam addExam(Course course, String designation, HashMap<Student, Integer> students) {
+        this.database.query("INSERT INTO exam (designation, cID) VALUES ('" + designation + "','" + course.getCID() + "')");
+        HashMap<Integer, ArrayList<String>> examData = this.database.getData("SELECT eID FROM exam WHERE designation='" + designation + "' AND cID=" + course.getCID());
         if (examData.isEmpty()) {
             return null;
         }
 
         int eID = Integer.parseInt(examData.get(0).get(0));
-        this.database.query("INSERT INTO student_exam VALUES (" + user.getUID() + "," + eID + ")");
+        for (Student student : students.keySet()) {
+            this.database.query("INSERT INTO student_exam VALUES (" + student.getUID() + "," + eID + "," + students.get(student) + ")");
+        }
 
         Exam exam = new Exam(eID, course, this);
         course.getExams().add(exam);
@@ -703,6 +704,9 @@ public class StudentManager {
         JOptionPane.showMessageDialog(jFrame, message, "Erfolg", JOptionPane.INFORMATION_MESSAGE);
     }
 
+    /**
+     * Starts the program
+     */
     public static void main(String[] args) {
         new StudentManager();
     }

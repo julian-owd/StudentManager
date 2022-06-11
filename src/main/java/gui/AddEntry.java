@@ -5,11 +5,13 @@ import course.Date;
 import course.Entry;
 import manager.StudentManager;
 import user.Student;
+import user.User;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.stream.Collectors;
 
 public class AddEntry {
     private JPanel panel1;
@@ -58,10 +60,12 @@ public class AddEntry {
             }
         });
 
+        ArrayList<Student> students = course.getStudents().stream().sorted(User::compareTo).collect(Collectors.toCollection(ArrayList::new));
+
         // filling the combobox with students
-        for (int i = 0; i < course.getStudents().size(); i++) {
-            this.studentHashMap.put(course.getStudents().get(i).getFirstName() + " " + course.getStudents().get(i).getLastName(), course.getStudents().get(i));
-            this.participantsComboBox.addItem(course.getStudents().get(i).getFirstName() + " " + course.getStudents().get(i).getLastName());
+        for (int i = 0; i < students.size(); i++) {
+            this.studentHashMap.put(students.get(i).getFirstName() + " " + students.get(i).getLastName(), students.get(i));
+            this.participantsComboBox.addItem(students.get(i).getFirstName() + " " + students.get(i).getLastName());
         }
 
         // listener of the button to add participants

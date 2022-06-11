@@ -71,12 +71,18 @@ public class StudentManagerTestUI {
                         + "('2', 'Ersatzleistung fortsetzen', '3')");
         sql.query(
                 "INSERT INTO `exam`"
-                        + "(`eID`, `designation`, `grade`, `cID`, `uID`) VALUES"
-                        + "('1', 'PI Leistungskontrolle 1 Q2', '12', '1', '2'),"
-                        + "('2', 'PI Leistungskontrolle 1 Q2', '15', '1', '3'),"
-                        + "('3', 'PI Leistungskontrolle 1 Q2', '10', '1', '4'),"
-                        + "('4', 'Geschi Mündlich 2.2.22', '15', '2', '2')");
+                        + "(`eID`, `designation`, `cID`) VALUES"
+                        + "('1', 'PI Leistungskontrolle 1 Q2', '1'),"
+                        + "('2', 'Geschi Mündlich 2.2.22', '2')");
 
+        sql.query("INSERT INTO `student_exam`" +
+                "(`uID`, `eID`, `grade`) VALUES" +
+                "('2', '1', '13')," +
+                "('3', '1', '10')," +
+                "('4', '1', '6')," +
+                "('2', '2', '1')," +
+                "('3', '2', '7'),");
+/*
         StudentManager sm = new StudentManager();
 
         System.out.println("Geladene Kurse: \n" + sm.getCourses() + "\n");
@@ -129,8 +135,6 @@ public class StudentManagerTestUI {
                         + sm.addHomework(kurs.getEntries().get(0), "Für Klausur lernen"));
         System.out.println("Hausaufgabe: " + kurs.getEntries().get(0).getHomework() + "\n");
 
-        System.out.println(
-                "Exam hinzufügen: " + sm.addExam(sm.findUser(2), kurs, "Mündlich 09.05.2022", 12));
         System.out.println("Exam: " + kurs.getExams().get(0) + "\n");
 
         sm.markHomeworkAsFinished(kurs.getEntries().get(0).getHomework());
@@ -151,6 +155,6 @@ public class StudentManagerTestUI {
         System.out.println("Löschung des Nutzers: " + sm.deleteUser(user));
 
         sm.logOut();
-        System.out.println("Aktueller Nutzer: " + sm.getCurrentUser());
+        System.out.println("Aktueller Nutzer: " + sm.getCurrentUser());*/
     }
 }
