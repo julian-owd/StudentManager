@@ -35,7 +35,6 @@ public class ChangeMail {
                 return;
             }
             if (!(studentManager.getCurrentUser().getPassword().equals(String.valueOf(passwordField.getPassword())))) {
-                System.out.println(studentManager.getCurrentUser().getPassword() + "=" + String.valueOf(passwordField.getPassword()));
                 studentManager.showErrorMessageDialog("Das eingegebene Passwort ist falsch!", jFrame);
                 return;
             }
