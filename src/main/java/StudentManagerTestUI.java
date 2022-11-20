@@ -1,11 +1,12 @@
 import manager.SQLManager;
+import manager.StudentManager;
 
 public class StudentManagerTestUI {
 
     public static void main(String[] args) {
         SQLManager sql = new SQLManager("localhost", "studentmanager", "root", "", 3306);
 
-        sql.query("INSERT INTO `user` (`uID`, `lastName`, `firstName`, `email`, `password`) VALUES (NULL, 'Oswald', 'Julian', 'julian.oswald@tls-giessen.eu', '1234'), (NULL, 'Roth', 'Elias', 'elias.roth@tls-giessen.eu', '1234'), (NULL, 'Iduh', 'Kenny', 'kenny.iduh@tls-giessen.eu', '1234'), (NULL, 'Drescher', 'Bela', 'bela.drescher@tls-giessen.eu', '1234'), (NULL, 'Carle', 'Mike', 'mike.carle@tls-giessen.eu', '1234'), (NULL, 'Miklic', 'Ivan', 'ivan.miklic@tls-giessen.eu', '1234'), (NULL, 'Mai', 'Luca', 'luca.mai@tls-giessen.eu', '1234'), (NULL, 'Hampel', 'Jonas', 'jonas.hampel@tls-giessen.eu', '1234'), (NULL, 'Bechthold', 'Julian', 'julian.bechthold@tls-giessen.eu', '1234'), (NULL, 'Brasch', 'Carolin', 'carolin.brasch@tls-giessen.eu', '1234'), (NULL, 'Engel', 'Elisabeth', 'elisabeth.engel@tls-giessen.eu', '1234'), (NULL, 'Aldudak', 'Ali', 'ali.aldudak@tls-giessen.eu', '1234')");
+        /**sql.query("INSERT INTO `user` (`uID`, `lastName`, `firstName`, `email`, `password`) VALUES (NULL, 'Oswald', 'Julian', 'julian.oswald@tls-giessen.eu', '1234'), (NULL, 'Roth', 'Elias', 'elias.roth@tls-giessen.eu', '1234'), (NULL, 'Iduh', 'Kenny', 'kenny.iduh@tls-giessen.eu', '1234'), (NULL, 'Drescher', 'Bela', 'bela.drescher@tls-giessen.eu', '1234'), (NULL, 'Carle', 'Mike', 'mike.carle@tls-giessen.eu', '1234'), (NULL, 'Miklic', 'Ivan', 'ivan.miklic@tls-giessen.eu', '1234'), (NULL, 'Mai', 'Luca', 'luca.mai@tls-giessen.eu', '1234'), (NULL, 'Hampel', 'Jonas', 'jonas.hampel@tls-giessen.eu', '1234'), (NULL, 'Bechthold', 'Julian', 'julian.bechthold@tls-giessen.eu', '1234'), (NULL, 'Brasch', 'Carolin', 'carolin.brasch@tls-giessen.eu', '1234'), (NULL, 'Engel', 'Elisabeth', 'elisabeth.engel@tls-giessen.eu', '1234'), (NULL, 'Aldudak', 'Ali', 'ali.aldudak@tls-giessen.eu', '1234')");
         sql.query("INSERT INTO `teacher` (`isSick`, `isAdmin`, `uID`) VALUES ('0', '1', '1'), ('0', '0', '12'), ('1', '1', '11'), ('1', '0', '10')");
         sql.query("INSERT INTO `course` (`cID`, `designation`) VALUES (NULL, 'Ethik GK 12 Brasch'), (NULL, 'Ethik GK 12 Aldudak'), (NULL, 'PI LK 12'), (NULL, 'TECH GK 12'), (NULL, 'Englisch 12 GK Brasch'), (NULL, '12 GK PoWi Aldudak')");
         sql.query("INSERT INTO `course_weekday` (`cID`, `weekday`) VALUES ('1', '4'), ('2', '4'), ('3', '3'), ('4', '1'), ('5', '3'), ('5', '5'), ('6', '1')");
